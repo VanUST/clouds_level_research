@@ -23,6 +23,8 @@ def get_corresponding_feature_points_roma(img1_path, img2_path,target_size):
 
 def get_corresponding_feature_points_loftr(img1, img2, vizualize = False,match_tresh = 0.5):
     
+    torch.cuda.empty_cache()
+    
     default_cfg = {
     "backbone_type": "ResNetFPN",
     "resolution": (8, 2),
@@ -66,7 +68,7 @@ def get_corresponding_feature_points_loftr(img1, img2, vizualize = False,match_t
     img2_tensor = K.image_to_tensor(img2_gray, False).float() / 255.0
 
     # Move tensors to GPU if available
-    device = torch.device('cpu')
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     img1_tensor = img1_tensor.to(device)
     img2_tensor = img2_tensor.to(device)
     # Initialize LoFTR matcher with pretrained weights ('outdoor' or 'indoor')
@@ -189,31 +191,33 @@ def apply_affine_matrix(kp_array, matrix):
         processed_kp[1] = kp_temp[1]
      return processed_kp
 
-def plot(X, labels, probabilities=None, parameters=None, ground_truth=False, ax=None):
+def plot(X, labels, probabilities=None, parameters=None, ground_truth=False, ax=None, colors=None):
     if ax is None:
         _, ax = plt.subplots(figsize=(10, 4))
     labels = labels if labels is not None else np.ones(X.shape[0])
     probabilities = probabilities if probabilities is not None else np.ones(X.shape[0])
-    # Black removed and is used for noise instead.
-    unique_labels = set(labels)
-    colors = [plt.cm.Spectral(each) for each in np.linspace(0, 1, len(unique_labels))]
-    # The probability of a point belonging to its labeled cluster determines
-    # the size of its marker
-    proba_map = {idx: probabilities[idx] for idx in range(len(labels))}
-    for k, col in zip(unique_labels, colors):
-        if k == -1:
-            # Black used for noise.
-            col = [0, 0, 0, 1]
 
-        class_index = np.where(labels == k)[0]
+    # Use the provided colors or generate them if not provided
+    if colors is None:
+        colors = get_cluster_colors(labels)
+
+    # Map probabilities for marker sizes
+    proba_map = {idx: probabilities[idx] for idx in range(len(labels))}
+
+    for label in set(labels):
+        if label == -1:
+            col = (0, 0, 0)
+        else:
+            col = colors[label]
+        class_index = np.where(labels == label)[0]
         for ci in class_index:
             ax.plot(
                 X[ci, 0],
                 X[ci, 1],
-                "x" if k == -1 else "o",
-                markerfacecolor=tuple(col),
+                "x" if label == -1 else "o",
+                markerfacecolor=col,
                 markeredgecolor="k",
-                markersize=4 if k == -1 else 1 + 5 * proba_map[ci],
+                markersize=4 if label == -1 else 1 + 5 * proba_map[ci],
             )
     n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
     preamble = "True" if ground_truth else "Estimated"
@@ -225,38 +229,114 @@ def plot(X, labels, probabilities=None, parameters=None, ground_truth=False, ax=
     plt.tight_layout()
     plt.show()
 
-def cluster_vecs(shift_arr,hdbscan_config,show_clusters=False):
-     
-     hdbscan = HDBSCAN(min_cluster_size = hdbscan_config["min_cluster_size"],
-                    min_samples = hdbscan_config["min_samples"],
-                    cluster_selection_epsilon = hdbscan_config["epsilon"],
-                    store_centers = "centroid",allow_single_cluster = True)
+def cluster_vecs(shift_arr, hdbscan_config, show_clusters=False):
+    # Initialize the HDBSCAN object with the provided configurations
+    hdbscan = HDBSCAN(
+        min_cluster_size=hdbscan_config["min_cluster_size"],
+        min_samples=hdbscan_config["min_samples"],
+        cluster_selection_epsilon=hdbscan_config["epsilon"],
+        allow_single_cluster=True,
+        store_centers= 'centroid'
+    )
 
-     if len(shift_arr)<hdbscan.min_samples:
-          return np.array([0,0])
-     hdbscan.fit(shift_arr)
+    # Handle case when shift_arr is too small
+    if len(shift_arr) < hdbscan_config["min_samples"]:
+        labels = np.full(len(shift_arr), -1, dtype=int)
+        colors = get_cluster_colors(labels)
+        return [], [], labels, colors  # Empty centroids, std_devs, labels, colors
 
-     if show_clusters == True:
-          plot(shift_arr, hdbscan.labels_, hdbscan.probabilities_)
+    # Fit the model
+    hdbscan.fit(shift_arr)
 
-     power_of_cluster = collections.Counter(hdbscan.labels_)
-     
-     indices = []
-     for key in power_of_cluster.keys():
-          if int(key)>=0:
-               indices.append(key)
-               
-     centroids = hdbscan.centroids_
+    # Get the labels
+    labels = hdbscan.labels_
 
-     good_centroids = []
-     for ind,centroid in enumerate(centroids):
-          good_centroids.append([power_of_cluster[ind],centroid])
+    # Generate colors
+    colors = get_cluster_colors(labels)
 
-     good_sorted = sorted(good_centroids,key = lambda x: x[0],reverse=True)
-     
-     sorted_centroids = [x[1] for x in good_sorted]
+    # Plot the clusters if requested
+    if show_clusters:
+        plot(shift_arr, labels, hdbscan.probabilities_, colors=colors)
 
-     if len(good_centroids) == 0:
-          return np.array([0,0])
-     
-     return sorted_centroids
+    # Count the number of points in each cluster
+    power_of_cluster = collections.Counter(labels)
+
+    # Filter out the noise cluster, which has label -1
+    valid_cluster_indices = [key for key in power_of_cluster.keys() if int(key) >= 0]
+
+    if len(valid_cluster_indices) == 0:
+        return [], [], labels, colors  # Return empty centroids and std_devs, but return labels and colors
+
+    # Extract the centroids of valid clusters
+    centroids = hdbscan.centroids_
+
+    # Gather centroids and their corresponding cluster sizes
+    good_centroids = []
+    for ind in valid_cluster_indices:
+        good_centroids.append([power_of_cluster[ind], centroids[ind]])
+
+    # Sort centroids by the size of the cluster, in descending order
+    good_sorted = sorted(good_centroids, key=lambda x: x[0], reverse=True)
+    sorted_centroids = [x[1] for x in good_sorted]
+
+    # Calculate the standard deviation for each cluster
+    cluster_standard_deviations = []
+    for cluster_label in valid_cluster_indices:
+        cluster_points = shift_arr[labels == cluster_label]
+        cluster_std_dev = np.std(cluster_points, axis=0)
+        cluster_standard_deviations.append(cluster_std_dev)
+
+    return sorted_centroids, cluster_standard_deviations, labels, colors
+
+def visualize_clusters_on_images(img1, img2, kp1, kp2, labels, colors):
+    # Convert images to color if they are grayscale
+    if len(img1.shape) == 2:
+        img1_viz = cv2.cvtColor(img1, cv2.COLOR_GRAY2BGR)
+    else:
+        img1_viz = img1.copy()
+    if len(img2.shape) == 2:
+        img2_viz = cv2.cvtColor(img2, cv2.COLOR_GRAY2BGR)
+    else:
+        img2_viz = img2.copy()
+
+    # Create a combined image for visualization
+    h1, w1 = img1_viz.shape[:2]
+    h2, w2 = img2_viz.shape[:2]
+    height = max(h1, h2)
+    width = w1 + w2
+    combined_image = np.zeros((height, width, 3), dtype=np.uint8)
+    combined_image[:h1, :w1] = img1_viz
+    combined_image[:h2, w1:w1 + w2] = img2_viz
+
+    # Draw matches
+    for idx, (pt1, pt2) in enumerate(zip(kp1, kp2)):
+        label = labels[idx]
+        color_rgb = colors.get(label, (0, 0, 0))  # RGB in 0-1 range
+        # Convert RGB to BGR 0-255 for OpenCV
+        color_bgr = [int(255 * color_rgb[2]), int(255 * color_rgb[1]), int(255 * color_rgb[0])]
+        x1, y1 = int(pt1[0]), int(pt1[1])
+        x2, y2 = int(pt2[0] + w1), int(pt2[1])  # Offset x2 by width of img1
+        color = tuple(color_bgr)
+        cv2.circle(combined_image, (x1, y1), 2, color, -1)
+        cv2.circle(combined_image, (x2, y2), 2, color, -1)
+        # cv2.line(combined_image, (x1, y1), (x2, y2), color, 1)
+
+    # Display the image
+    cv2.imshow('Clustered Feature Matches', combined_image)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    
+
+def get_cluster_colors(labels):
+    unique_labels = set(labels)
+    unique_labels_list = sorted(unique_labels)
+    n_clusters = len(unique_labels_list)
+    colors = {}
+    colormap = plt.cm.get_cmap('rainbow', n_clusters)
+    for idx, label in enumerate(unique_labels_list):
+        if label == -1:
+            colors[label] = (0, 0, 0)  # Black for noise
+        else:
+            rgb = colormap(idx)[:3]  # RGB in 0-1 range
+            colors[label] = rgb
+    return colors
