@@ -1,0 +1,33 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+
+\title{Cloud Base Height Estimation from Stereo Images\\ Using Deep Feature Matching and Temporal Filtering}
+\author{I.A. Ustimov, A.I. Chulichkov\\[2mm]
+\small Department of Mathematical Modeling and Informatics, Faculty of Physics,\\
+M.V. Lomonosov Moscow State University, Moscow, Russia\\
+\small \texttt{ustimov.ia@physics.msu.ru}}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+
+Continuous monitoring of cloud base height (CBH) is essential for meteorology, aviation safety, and climate modelling. Traditional laser ceilometers provide precise but pointwise measurements and are expensive to deploy at scale. We present a passive stereo-vision pipeline that estimates CBH from a pair of ground-based sky-facing images captured by fisheye cameras (180$^\circ$ field of view, $B = 45$ m stereo baseline).
+
+The core of the pipeline is \textbf{LoFTR} (Local Feature TRansformer), a detector-free deep learning architecture based on Vision Transformers that produces dense, sub-pixel correspondences between the two views directly from image pairs without a separate keypoint detection stage. The disparity of each matched pair is converted to height via an equidistant-projection stereo formula derived for the fisheye geometry. Clusters of consistent disparities corresponding to distinct cloud layers are extracted using \textbf{HDBSCAN}, a hierarchical density-based clustering algorithm that automatically rejects outlier correspondences from clear-sky regions or lens artefacts.
+
+To enforce physical consistency across time, we introduce a three-stage \textbf{spatial filter} (DBSCAN sub-clustering, convex-hull density check, and neighbour-consistency verification of disparities in image space) and a one-dimensional adaptive \textbf{Kalman filter} with innovation-dependent measurement noise covariance. The adaptive measurement scheme automatically down-weights likely outliers without hard rejection thresholds, suppressing physically unrealistic frame-to-frame jumps of up to 500 m per 10 s.
+
+The pipeline is validated against a co-located \textbf{DOL-2} laser ceilometer (semiconductor pulsed laser, $10$--$3000$ m range, $\pm(5 + 0.05H)$ m accuracy) using a 5-hour daytime sequence acquired on May~23, 2025. Raw per-frame estimates exhibit poor global Pearson correlation ($r \approx 0.04$) with the ceilometer due to wind-driven decoupling of cloud layers observed by the two instruments. After temporal filtering and splitting the series into 30-minute windows with individual time-shift alignment, the mean correlation rises to $r = 0.61$, and $72\%$ of windows (13 out of 18) achieve $r > 0.5$, with a maximum of $r = 0.94$ under favourable atmospheric conditions. The Kalman filter reduces the median frame-to-frame height jump by a factor of~4.3 and raises the 5-hour autocorrelation of the height series from 0.11 to 0.90.
+
+The approach demonstrates that a compact, low-cost stereo rig coupled with modern deep learning-based feature matching and classical state-space filtering can provide continuous geometric CBH estimates complementary to optical ceilometer readings. The systematic offset between the two instruments is explained by the fundamental difference in measurement principles: the laser ceilometer detects the optical backscatter threshold from within the cloud layer, whereas the stereo method measures the geometric boundary via scattered sunlight.
+
+\end{abstract}
+
+\end{document}

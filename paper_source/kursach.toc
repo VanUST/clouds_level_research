@@ -1,0 +1,23 @@
+\babel@toc {russian}{}\relax 
+\contentsline {section}{\numberline {1}Обзор литературы}{3}{}%
+\contentsline {section}{\numberline {2}Геометрическая модель эксперимента}{4}{}%
+\contentsline {subsection}{\numberline {2.1}Погрешность расстояния}{5}{}%
+\contentsline {section}{\numberline {3}Определение аффинного преобразования}{7}{}%
+\contentsline {section}{\numberline {4}Определение смещения между изображениями}{8}{}%
+\contentsline {section}{\numberline {5}Практическая часть}{10}{}%
+\contentsline {subsection}{\numberline {5.1}Поиск афинного преобразования}{10}{}%
+\contentsline {subsection}{\numberline {5.2}Определение нижней границы облачности}{10}{}%
+\contentsline {subsection}{\numberline {5.3}Анализ чувствительности к погрешности матрицы поворота гомографии}{14}{}%
+\contentsline {section}{\numberline {6}Анализ временных рядов}{15}{}%
+\contentsline {subsection}{\numberline {6.1}Синхронизация и корреляционный анализ}{15}{}%
+\contentsline {section}{\numberline {7}Пространственная фильтрация кластеров}{19}{}%
+\contentsline {section}{\numberline {8}Временная фильтрация на основе фильтра Калмана}{20}{}%
+\contentsline {subsection}{\numberline {8.1}Постановка задачи}{20}{}%
+\contentsline {subsection}{\numberline {8.2}Мотивация}{20}{}%
+\contentsline {subsection}{\numberline {8.3}Одномерный инновационно-адаптивный фильтр Калмана}{20}{}%
+\contentsline {subsection}{\numberline {8.4}Слияние кластеров и стратегия выбора}{21}{}%
+\contentsline {subsection}{\numberline {8.5}Результаты временной фильтрации}{22}{}%
+\contentsline {section}{\numberline {9}О систематическом смещении показаний высотомера}{23}{}%
+\contentsline {section}{\numberline {10}Многотрековое расширение}{24}{}%
+\contentsline {section}{\numberline {11}Обсуждение результатов}{26}{}%
+\contentsline {section}{\numberline {12}Литература}{27}{}%
