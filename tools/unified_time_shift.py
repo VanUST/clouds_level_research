@@ -519,6 +519,109 @@ def intersect_time_ranges(series_a, series_b):
 
 
 # ---------------------------------------------------------------------------
+# Time-interval filtering
+# ---------------------------------------------------------------------------
+
+# PURPOSE: Filter a sorted time-height series to a configurable analysis window.
+#          Logs how many points were inside and outside the interval.
+# INPUTS: data (list of (datetime, float)), time_start (str "HH:MM:SS"), time_end (str "HH:MM:SS"), label (str)
+# OUTPUTS: Filtered list of (datetime, float). Returns empty if no points in range.
+# KEYWORDS: time_filter, window, analysis_interval, skip
+def filter_by_time_window(data, time_start_str, time_end_str, label="series"):
+    if not data:
+        print(f"[SKIP] {label}: no data to filter (empty series).")
+        return []
+    if time_start_str is None or time_end_str is None:
+        return data
+    try:
+        t_start = datetime.datetime.strptime(time_start_str, "%H:%M:%S").time()
+        t_end = datetime.datetime.strptime(time_end_str, "%H:%M:%S").time()
+    except ValueError:
+        print(f"[WARN] Invalid time format in analysis window config. Keeping all {len(data)} points.")
+        return data
+    original_count = len(data)
+    filtered = [(dt, val) for dt, val in data if t_start <= dt.time() <= t_end]
+    skipped = original_count - len(filtered)
+    print(f"[FILTER] {label}: {len(filtered)}/{original_count} points within "
+          f"{time_start_str}--{time_end_str} ({skipped} skipped outside window).")
+    return filtered
+
+
+# PURPOSE: Count how many algorithm timesteps have no corresponding ceilometer measurement
+#          within tolerance, and report them for diagnostic purposes.
+# INPUTS: algo_data, ceilo_data (list of tuples), tolerance_s (int)
+# OUTPUTS: (count_skipped, skipped_timestamps) — number and list of timestamps without ceilometer match.
+# KEYWORDS: missing_data, ceilometer_gap, diagnostics, skip
+def count_unmatched_algo_points(algo_data, ceilo_data, tolerance_s):
+    if not algo_data or not ceilo_data:
+        return len(algo_data) if algo_data else 0, []
+    ceilo_ts = np.array([d.timestamp() for d, _h in ceilo_data])
+    skipped = []
+    for t, h in algo_data:
+        diffs = np.abs(ceilo_ts - t.timestamp())
+        if np.min(diffs) > tolerance_s:
+            skipped.append(t)
+    if skipped:
+        print(f"[SKIP] {len(skipped)} algorithm timesteps have NO ceilometer data "
+              f"within +/-{tolerance_s}s tolerance.")
+    else:
+        print(f"[OK] All {len(algo_data)} algorithm timesteps have ceilometer data within tolerance.")
+    return len(skipped), skipped
+
+
+# PURPOSE: Create a scatter plot of ALL algorithm-ceilometer pairs (nearest-in-time, no shift search)
+#          across the full analysis interval, as a raw baseline before any shift optimization.
+# INPUTS: algo_data, ceilo_data (list of (datetime, float)), tolerance_s (int), label (str), save_path (str|None)
+# OUTPUTS: Saved or displayed scatter plot with Pearson r.
+# KEYWORDS: all_points, scatter, baseline, raw_correlation, full_interval
+def plot_all_points_correlation(algo_data, ceilo_data, tolerance_s, label, save_path=None):
+    if not algo_data or not ceilo_data:
+        print(f"[SKIP] Cannot plot all-points correlation: missing data.")
+        return
+
+    ceilo_ts = np.array([d.timestamp() for d, _h in ceilo_data])
+    ceilo_hs = np.array([h for _d, h in ceilo_data])
+    algo_ts = np.array([t.timestamp() for t, _h in algo_data])
+    algo_hs = np.array([h for _t, h in algo_data])
+
+    # For each algorithm frame, find the nearest-in-time ceilometer measurement
+    ceilo_idx = _nearest_indices(algo_ts, ceilo_ts)
+    valid_mask = np.abs(ceilo_ts[ceilo_idx] - algo_ts) <= tolerance_s
+    paired_algo_h = algo_hs[valid_mask]
+    paired_ceilo_h = ceilo_hs[ceilo_idx[valid_mask]]
+
+    n_skipped = np.sum(~valid_mask)
+    n_total = len(algo_hs)
+    print(f"[PAIR] All-points pairing: {len(paired_algo_h)}/{n_total} algorithm frames "
+          f"matched to ceilometer ({n_skipped} skipped, no ceilometer within {tolerance_s}s).")
+
+    if len(paired_algo_h) < 2:
+        print(f"[SKIP] Too few paired points ({len(paired_algo_h)}) for all-points correlation scatter.")
+        return
+
+    r = np.corrcoef(paired_ceilo_h, paired_algo_h)[0, 1]
+
+    fig, ax = plt.subplots(figsize=(9, 9))
+    ax.scatter(paired_ceilo_h, paired_algo_h, alpha=0.6, s=20,
+               label=f"n={len(paired_algo_h)} (skipped={n_skipped})")
+    lim = max(np.max(paired_ceilo_h), np.max(paired_algo_h)) * 1.05
+    ymin = max(0, min(np.min(paired_ceilo_h), np.min(paired_algo_h)) * 0.95)
+    ax.plot([ymin, lim], [ymin, lim], "r--", linewidth=1.5, label="y = x")
+    ax.set_title(f"All-Points Correlation ({label})\nPearson r = {r:.4f}",
+                 fontsize=15, fontweight="bold")
+    ax.set_xlabel("Ceilometer Height (m)", fontsize=12)
+    ax.set_ylabel("Algorithm Height (m)", fontsize=12)
+    ax.set_xlim(ymin, lim)
+    ax.set_ylim(ymin, lim)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.legend(fontsize=10)
+    ax.set_aspect("equal", adjustable="box")
+    plt.tight_layout()
+    _save_or_show(fig, save_path)
+    return r, len(paired_algo_h), n_skipped
+
+
+# ---------------------------------------------------------------------------
 # Main pipeline
 # ---------------------------------------------------------------------------
 
@@ -546,14 +649,34 @@ def run_pipeline(cfg):
     ceilo = parse_ceilometer_logs(cfg["ceilo_path"])
     algo = parse_algorithm_logs(cfg["algo_dir"], ceilo, cfg.get("min_cluster_size", 3), cfg.get("top_cluster_min", 5))
     if not ceilo or len(algo) < 2:
-        print("\nInsufficient data. Exiting.")
+        print(f"\n[SKIP] Insufficient data: ceilo={len(ceilo)} points, algo={len(algo)} points. Exiting.")
         return
+
+    # Filter both time series to the configured analysis time window
+    print(f"\n--- Time-Window Filtering ---")
+    t_start = cfg.get("analysis_time_start", None)
+    t_end = cfg.get("analysis_time_end", None)
+    if t_start and t_end:
+        ceilo = filter_by_time_window(ceilo, t_start, t_end, "ceilometer")
+        algo = filter_by_time_window(algo, t_start, t_end, "algorithm")
+        if not ceilo or not algo:
+            print(f"\n[SKIP] No data remaining after time-window filter. Exiting.")
+            return
+
     # Trim both datasets to their intersecting time interval
     print(f"\n--- Intersecting Time Ranges ---")
     print(f"  Ceilometer: {ceilo[0][0]} to {ceilo[-1][0]} ({len(ceilo)} points)")
     print(f"  Algorithm:  {algo[0][0]} to {algo[-1][0]} ({len(algo)} points)")
     ceilo, algo = intersect_time_ranges(ceilo, algo)
+    if not ceilo or not algo:
+        print(f"[SKIP] No overlapping time range between ceilometer and algorithm data. Exiting.")
+        return
     print(f"  Intersection: {ceilo[0][0]} to {ceilo[-1][0]} ({len(ceilo)} ceilo + {len(algo)} algo)")
+
+    # Report algorithm timesteps without ceilometer data
+    print(f"\n--- Ceilometer Coverage Check ---")
+    tolerance = cfg["time_tolerance"]
+    count_unmatched_algo_points(algo, ceilo, tolerance)
 
     if cfg["smooth"]:
         print(f"\n--- Smoothing (window={cfg['smooth_window']}) ---")
@@ -564,13 +687,19 @@ def run_pipeline(cfg):
 
     # Zero-shift baseline: direct nearest-in-time pairing without any time shift
     print(f"\n--- Zero-Shift Baseline ---")
-    raw_aligned = _align_at_shift(algo, ceilo, 0, cfg["time_tolerance"])
+    raw_aligned = _align_at_shift(algo, ceilo, 0, tolerance)
     if raw_aligned:
         _t, ah, ch = zip(*raw_aligned)
         raw_r = np.corrcoef(ch, ah)[0, 1]
     else:
         raw_r = 0
     print(f"  r={raw_r:.4f}, n={len(raw_aligned)}")
+
+    # All-points correlation scatter (full time interval, raw pairing, no shift search)
+    print(f"\n--- All-Points Correlation (full interval) ---")
+    plot_all_points_correlation(
+        algo, ceilo, tolerance, cfg.get("affine_label", "Unknown"),
+        os.path.join(assets, "correlation_all_points.png"))
 
     # Pre-shift plots (raw, zero-shift alignment)
     plot_temporal(ceilo, raw_aligned, "No Shift",
@@ -648,13 +777,19 @@ if __name__ == "__main__":
         "time_tolerance": 10,
         "smooth": True,
         "smooth_window": 5,
-        "window_min": 15,
+        "window_min": 5,
         "distance_m": 200.0,
         "bias_correction": False,
         "dtw": False,
         "dtw_window": 20,
+        "affine_label": "Default",
     }
+    # CLI override: first arg = algo_dir, second arg = assets_dir, third arg = affine_label
     if len(sys.argv) > 1 and sys.argv[1]:
         cfg["algo_dir"] = sys.argv[1]
-    print("Edit constants or pass algo_dir as first arg")
+    if len(sys.argv) > 2 and sys.argv[2]:
+        cfg["assets_dir"] = sys.argv[2]
+    if len(sys.argv) > 3 and sys.argv[3]:
+        cfg["affine_label"] = sys.argv[3]
+    print(f"[CONFIG] affine_label={cfg['affine_label']}  |  mode={cfg['mode']}")
     run_pipeline(cfg)

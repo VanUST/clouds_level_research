@@ -15,8 +15,8 @@ class CameraModel(Enum):
 RUN_TASK = 'PROCESS_TIME_SERIES'
 
 # Parameters for the time series processing task
-TIME_SERIES_START_TIME = "12-00-00" # HH-MM-SS format
-TIME_SERIES_END_TIME = "17-00-00"   # HH-MM-SS format
+TIME_SERIES_START_TIME = "11-00-00" # HH-MM-SS format
+TIME_SERIES_END_TIME = "19-00-00"   # HH-MM-SS format
 
 # Stride for time series processing. Processes every Nth image pair.
 # stride=1: every pair (default), stride=2: every other pair, etc.
@@ -27,12 +27,15 @@ STRIDE = 1
 # 2. PATHS CONFIGURATION
 # =================================================================================
 # Set the directory containing the stereo image pairs (e.g., 'img-2025-05-23T12-26-02devID1.jpg')
-IMAGE_DIR = "/home/omega-luler/Data/clouds/fisheye_250523_part2"
+IMAGE_DIR = r"C:\Users\1\Pictures\CLOUDS\fisheye_250523_part2"
 
 MANUAL_POINTS_PATH = "/home/omega-luler/tasks/clouds_level_research/data/trail/trail_points.npz"
 
 # Directory to save log files from the time series analysis
-LOG_DIR = "/home/omega-luler/tasks/clouds/logs/250523"
+LOG_DIR = r"C:\Users\1\Pictures\CLOUDS\logs\250523"
+
+# Path to ceilometer DOL-2 log file
+CEILOMETER_LOG_PATH = r"C:\Users\1\tasks\clouds\data\height data\Zve_Sci_250523.txt"
 
 
 # =================================================================================
@@ -50,10 +53,17 @@ ANGLE_OF_VIEW = 180.0  # degrees
 # Original image width in pixels. Used in distance calculation.
 IMAGE_WIDTH = 1920
 
-# Affine transformation matrix for fisheye
-AFFINE_MATRIX = np.array([[0.0014207881638163794, -0.9999989906799874, 1972.73673196935],
-                          [0.9999989906799874, 0.0014207881638163794, 3.6708577729732]])
+# Affine transformation matrices for fisheye calibration.
+# OLD (currently active, calibrated from sun positions):
+AFFINE_OLD = np.array([[0.0014207881638163794, -0.9999989906799874, 1972.73673196935],
+                       [0.9999989906799874, 0.0014207881638163794, 3.6708577729732]])
+# NEW (alternative calibration):
+AFFINE_NEW = np.array([[0.0249, -0.9997, 1931.7],
+                       [0.9997, 0.0249, -20.8]])
 
+# Active affine matrix. Swapped programmatically by run_comparison.py.
+AFFINE_MATRIX = AFFINE_OLD.copy()
+# AFFINE_MATRIX = AFFINE_NEW.copy()
 
 # M = np.array([[9.97682421e-01, 1.15133317e-02, 2.36960989e+02],
 #              [1.06785471e-02, 9.97667996e-01, 2.48774002e+01]])
@@ -137,4 +147,48 @@ VISUALIZATION_CONTROLS = {
     'show_clustered_matches_on_images': True,
     'plot_distance_histograms': False,
     'run_normality_tests': False, # Plots sub-histograms with normality stats
+}
+
+# =================================================================================
+# 7. UNIFIED TIME SHIFT ANALYSIS CONFIGURATION
+# =================================================================================
+# Configuration for tools/unified_time_shift.py analysis pipeline.
+# Used by run_comparison.py to generate comparison plots between affine variants.
+
+UTS_CONFIG = {
+    # Ceilometer log + algorithm log dirs are supplied at runtime per affine variant.
+
+    # Time window for analysis: all points within this interval are included.
+    # Format HH:MM:SS. Points outside this range are skipped.
+    "analysis_time_start": "11:00:00",
+    "analysis_time_end":   "19:00:00",
+
+    # Shift search mode: "constant" (global shift) or "dynamic" (sliding window)
+    "mode": "dynamic",
+
+    # Global shift search range (seconds), for constant mode
+    "shift_range": 300,
+
+    # Temporal pairing tolerance: max seconds between algorithm and ceilometer timestamps
+    "time_tolerance": 10,
+
+    # Smoothing
+    "smooth": True,
+    "smooth_window": 5,
+
+    # Dynamic mode: sliding window size in minutes
+    "window_min": 5,
+
+    # Assumed cloud layer distance for wind-proxy angle estimation (meters)
+    "distance_m": 200.0,
+
+    # Bias correction brute-force search
+    "bias_correction": False,
+
+    # Dynamic Time Warping analysis
+    "dtw": False,
+    "dtw_window": 20,
+
+    # Assets output root directory. Subdir per affine variant created automatically.
+    "assets_root": r"C:\Users\1\Pictures\CLOUDS\report_assets",
 }

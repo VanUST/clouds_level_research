@@ -40,9 +40,13 @@ class PipelineRunner:
         valid_pairs = [tuple(paths) for paths in image_pairs.values() if all(paths)]
         return sorted(valid_pairs)
 
-    def _analyze_stereo_pair(self, img1_path: str, img2_path: str) -> dict | None:
+    def _analyze_stereo_pair(self, img1_path: str, img2_path: str, affine_matrix=None) -> dict | None:
         """
         Analyzes a single stereo pair and returns cluster info plus raw match data.
+
+        Args:
+            img1_path, img2_path: Paths to the stereo pair.
+            affine_matrix: Optional 2x3 numpy array overriding config.AFFINE_MATRIX.
 
         Returns:
             dict with keys:
@@ -64,7 +68,8 @@ class PipelineRunner:
             return None
 
         # Preprocess: Apply affine transform and crop
-        img1 = cv2.warpAffine(img1_orig, cfg.AFFINE_MATRIX, dsize=cfg.ORIGINAL_SIZE)
+        _affine = affine_matrix if affine_matrix is not None else cfg.AFFINE_MATRIX
+        img1 = cv2.warpAffine(img1_orig, _affine, dsize=cfg.ORIGINAL_SIZE)
         img1 = center_crop(img1, cfg.TARGET_SIZE[0], cfg.TARGET_SIZE[1])
         img2 = center_crop(img2_orig, cfg.TARGET_SIZE[0], cfg.TARGET_SIZE[1])
 
@@ -242,12 +247,13 @@ class PipelineRunner:
         os.makedirs(log_dir, exist_ok=True)
         return log_dir
 
-    def process_time_series(self, backend: str = None):
+    def process_time_series(self, backend: str = None, affine_matrix=None):
         """
         Processes a time-ordered series of image pairs within a configured time window.
         
         Args:
             backend: Optional override for the matcher backend name. Used for log subdirectory.
+            affine_matrix: Optional 2x3 numpy array overriding config.AFFINE_MATRIX.
         """
         cfg = self.config
         image_pairs = self._get_time_filtered_pairs(
@@ -269,6 +275,8 @@ class PipelineRunner:
 
         print(f"Found {len(image_pairs)} time-filtered image pairs to process (stride={stride}).")
         
+        skipped_no_clusters = 0
+        skipped_no_height = 0
         for img1_path, img2_path in image_pairs:
             base_filename = os.path.basename(img1_path)
             log_name = base_filename.replace('devID1.jpg', '.txt')
@@ -278,7 +286,7 @@ class PipelineRunner:
                 print(f"\nLog for {base_filename} already exists. Skipping.")
                 continue
 
-            result = self._analyze_stereo_pair(img1_path, img2_path)
+            result = self._analyze_stereo_pair(img1_path, img2_path, affine_matrix=affine_matrix)
             
             if result is not None:
                 clusters = result['clusters']
@@ -288,12 +296,22 @@ class PipelineRunner:
                         label = "Dominant Cluster" if i == 0 else f"Cluster {i+1}"
                         print(f"    - {label} ({res['size']} points): Distance = {res['distance']:.2f} m")
                 else:
-                    print("  No valid clusters, but matches found.")
+                    skipped_no_height += 1
+                    print(f"  [SKIP] No valid clusters (too few matches). Frames skipped so far: {skipped_no_height}")
             else:
-                print("  No valid clusters found for this pair.")
+                skipped_no_clusters += 1
+                print(f"  [SKIP] Insufficient matches for clustering. Frames skipped so far: {skipped_no_clusters}")
 
             if cfg.LOG_RESULTS and result is not None:
                 self._write_log_for_pair(result, img1_path, log_dir)
+
+        total_skipped = skipped_no_clusters + skipped_no_height
+        print(f"\n--- Time Series Complete ---")
+        print(f"  Total frames processed: {len(image_pairs)}")
+        print(f"  Skipped (no clusters/too few matches): {skipped_no_clusters}")
+        print(f"  Skipped (clusters but no valid height): {skipped_no_height}")
+        print(f"  Total skipped: {total_skipped}")
+        print(f"  Valid frames with height: {len(image_pairs) - total_skipped}")
 
     def _process_trail_pair(self):
         """

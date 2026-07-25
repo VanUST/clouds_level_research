@@ -191,7 +191,7 @@ def get_cluster_colors(labels: np.ndarray) -> dict:
     unique_labels = sorted(list(set(labels)))
     n_clusters = len(unique_labels)
     # Using 'viridis' which is perceptually uniform and good for data visualization
-    colormap = plt.cm.get_cmap('viridis', n_clusters)
+    colormap = plt.get_cmap('viridis', n_clusters)
     colors = {}
     for i, label in enumerate(unique_labels):
         if label == -1:

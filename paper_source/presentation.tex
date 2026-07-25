@@ -1,5 +1,7 @@
 \documentclass[11pt,aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
+\usepackage{cmap}
+\usepackage[T2A]{fontenc}
 \usepackage[english,russian]{babel}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -124,7 +126,8 @@ $D = \frac{\xi_0 \cdot B}{\pi \cdot |\Delta\xi|}$,\;
 \end{itemize}
 
 \column{0.50\textwidth}
-\includegraphics[width=\textwidth]{cluster}
+\includegraphics[width=0.85\textwidth]{cluster}\\[2mm]
+\includegraphics[width=0.85\textwidth]{height_dist}
 \end{columns}
 \end{frame}
 
@@ -231,6 +234,49 @@ HDBSCAN кластеризует по смещению, но \textbf{не про
 \end{columns}
 \end{frame}
 
+%% ================ SECTION: DYNAMIC SHIFT =================
+
+\section{Анализ временных сдвигов}
+
+\begin{frame}{Динамический временной сдвиг}
+\begin{columns}
+\column{0.50\textwidth}
+\small
+\textbf{Проблема:} ветер сносит облака между моментами измерений алгоритма и высотомера --- возникает переменный временной лаг, разрушающий корреляцию.
+
+\vspace{2mm}
+\textbf{Метод:} разбиение временного ряда на скользящие окна, в каждом окне подбирается оптимальный глобальный сдвиг $\Delta t$, максимизирующий $r$ Пирсона:
+\[
+\Delta t^* = \arg\max_{\Delta t}\;\bigl|\mathrm{corr}\bigl(H_{\text{ceilo}}(t),\; H_{\text{algo}}(t+\Delta t)\bigr)\bigr|
+\]
+
+\vspace{2mm}
+Физический смысл $\Delta t$ --- прокси угла сноса ветра: $\Delta t = \frac{D}{V} \cos\theta$.
+
+\column{0.50\textwidth}
+\includegraphics[width=\textwidth]{correlation_dynamic}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Профиль динамического сдвига}
+\begin{columns}
+\column{0.50\textwidth}
+\small
+Скользящее окно 5 минут, поиск $\pm 300$ с. Сдвиг $\Delta t$ меняется от $-240$ до $+170$ с в течение дня --- отражает смену направления и силы ветра.
+
+\vspace{2mm}
+\textbf{Результат:} после динамической компенсации сдвига:
+\begin{itemize}
+  \item Средняя $r$ (30-мин окна): $0{,}61$
+  \item 72\% окон с $r > 0{,}5$
+  \item $\max r = 0{,}94$
+\end{itemize}
+
+\column{0.50\textwidth}
+\includegraphics[width=\textwidth]{dynamic_shift_profile}
+\end{columns}
+\end{frame}
+
 %% ================ SECTION: CEILOMETER BIAS =================
 
 \section{Смещение высотомера}
@@ -263,19 +309,6 @@ $\Rightarrow$ \textbf{Стереометод и высотомер измеря�
 %% ================ SECTION: CONCLUSIONS =================
 
 \section{Заключение}
-
-\begin{frame}{Полный конвейер обработки}
-\begin{center}
-\renewcommand{\arraystretch}{1.6}
-\begin{tabular}{c c c c c}
-\fbox{Стереопара} & $\rightarrow$ & \fbox{\shortstack{Аффинная\\калибровка}} & $\rightarrow$ & \fbox{\shortstack{LoFTR\\мэтчинг}} \\[2mm]
-& & & & $\downarrow$ \\[2mm]
-\fbox{Оценка НГО} & $\leftarrow$ & \fbox{\shortstack{Фильтр\\Калмана}} & $\leftarrow$ & \fbox{\shortstack{HDBSCAN\\кластеризация}} \\[2mm]
-& & $\updownarrow$ & & \\[2mm]
-\multicolumn{3}{c}{\fbox{Пространственный фильтр}} & & \\
-\end{tabular}
-\end{center}
-\end{frame}
 
 \begin{frame}{Выводы}
 \begin{enumerate}
