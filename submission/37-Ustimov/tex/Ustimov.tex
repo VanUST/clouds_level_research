@@ -61,6 +61,7 @@ Cloud Base Height Estimation from Stereo Images\\ Using Deep Feature Matching an
 \affiliation{\addressb}
 \author{\firstname{A.I.}~\surname{Chulichkov}}
 \affiliation{\addressa}
+\affiliation{\addressb}
 \author{\firstname{M.A.}~\surname{Krinitskiy}}
 \affiliation{\addressc}
 \affiliation{\addressd}
@@ -89,7 +90,7 @@ Cloud base height (CBH) is a fundamental parameter in meteorology, aviation safe
 
 Passive stereo-vision methods offer a complementary approach: they are inherently low-cost (requiring only two consumer-grade cameras), can be deployed widely, and measure the \emph{geometric} cloud boundary via scattered sunlight rather than the optical backscatter profile. However, the practical deployment of stereo systems for cloud height estimation faces several challenges: (i)~the texture-poor, semi-transparent nature of clouds makes traditional keypoint-based feature matching unreliable; (ii)~fisheye lenses, required for wide sky coverage, introduce strong geometric distortions that must be calibrated; (iii)~wind-driven cloud motion decouples temporally consecutive observations, breaking naive frame-to-frame consistency.
 
-Prior work on solar-calibrated stereo cloud height estimation was pioneered by Andreev et al.\ and Nikitin et al.~\cite{3,4}, who used classical feature detectors (SIFT-like methods) for correspondence matching. Our work significantly extends this approach in three directions. First, we replace classical keypoint detectors with LoFTR~\cite{1}, a detector-free Vision-Transformer-based architecture that produces dense correspondences directly from the image pair, dramatically increasing the number and quality of matches in texture-poor cloud regions. Second, we introduce a rigorous spatial filtering pipeline that verifies the physical plausibility of disparity-based clusters before feeding them to the temporal tracker. Third, we develop an innovation-adaptive Kalman filter that automatically adjusts its measurement confidence based on the deviation from prediction, suppressing outliers without manual threshold tuning. The complete pipeline is validated against a co-located ceilometer over a 5-hour diurnal cycle, and a multi-track extension is designed for multi-layer cloud scenarios.
+Prior investigations on solar-calibrated stereo cloud height estimation were performed, for example, by Andreev et al.\ and Nikitin et al.~\cite{3,4}, who used classical feature detectors (SIFT-like methods) for correspondence matching. Our work significantly extends this approach in three directions. First, we replace classical keypoint detectors with LoFTR~\cite{1}, a detector-free Vision-Transformer-based architecture that produces dense correspondences directly from the image pair, dramatically increasing the number and quality of matches in texture-poor cloud regions. Second, we introduce a rigorous spatial filtering pipeline that verifies the physical plausibility of disparity-based clusters before feeding them to the temporal tracker. Third, we develop an innovation-adaptive Kalman filter that automatically adjusts its measurement confidence based on the deviation from prediction, suppressing outliers without manual threshold tuning. The complete pipeline is validated against a co-located ceilometer over a 5-hour diurnal cycle, and a multi-track extension is designed for multi-layer cloud scenarios.
 
 \section{Geometric Model and Affine Calibration}\label{sec:geometry}
 
@@ -129,7 +130,7 @@ Given $K \ge 3$ pairs of corresponding solar positions $(x_1^{(i)}, y_1^{(i)})$ 
 \end{equation}
 In practice, $H$ is computed using OpenCV's \texttt{estimateAffine2D} with RANSAC initialisation. Image~\#1 is warped by $H$ to produce image~\#1$'$; feature matching is then performed between \#1$'$ and the original image~\#2. This order of operations---applying the affine transformation before matching---eliminates the need for a separate coordinate transformation stage.
 
-For the system deployed in this study, calibration performed on May~29, 2023 yielded a rotation submatrix close to identity, confirming near-parallel physical alignment of the cameras~\cite{3,4}. However, calibration stability is limited: diurnal temperature variations and wind-induced mechanical deformations can cause the effective affine parameters to drift. Repeat calibrations on different days revealed disparity shifts of up to 30 pixels for the same object, equivalent to $\approx 900$~m in height, motivating regular recalibration before each observation session.
+For the system deployed in this study, calibration performed on May~29, 2023 yielded a rotation submatrix close to identity, confirming near-parallel physical alignment of the cameras~\cite{3,4}. However, calibration stability is limited in field conditions. Repeat calibrations on different days revealed disparity shifts of up to 30 pixels for the same object, equivalent to $\approx 900$~m in height. The observed drift is most plausibly attributed to diurnal temperature variations and wind-induced mechanical deformations of the camera mount, and it motivates regular recalibration before each observation session.
 
 \section{Feature Matching and Clustering}\label{sec:matching}
 
@@ -150,7 +151,7 @@ The output is a set of several hundred to over a thousand sub-pixel corresponden
 
 \subsection{HDBSCAN clustering in disparity space}
 
-Not all LoFTR correspondences are physically meaningful: some arise from clear-sky regions, lens artefacts, or sensor noise. In conditions of multi-layered cloudiness, correspondences belong to different cloud layers at distinct heights, producing multiple modes in the disparity distribution. To separate valid correspondences from outliers and to resolve multiple cloud layers, we apply HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise)~\cite{2} in the 2D disparity space $(\Delta\xi, \Delta\eta)$.
+Not all LoFTR correspondences are physically meaningful: some arise from clear-sky regions, lens artefacts, or sensor noise. In conditions of multi-layered cloudiness, correspondences belong to different cloud layers at distinct heights, producing multiple modes in the disparity distribution. To separate valid correspondences from outliers and to resolve multiple cloud layers, we apply HDBSCAN (Hierarchical Density-Based Spatial Clustering of Applications with Noise)~\cite{2} in the 2D disparity space $(\Delta\xi, \Delta\eta)$. An example of the resulting clustering is shown in Fig.~\ref{fig:cluster}: correspondences are grouped into distinct disparity clusters, each corresponding to a cloud layer, with the derived height distribution below.
 
 HDBSCAN offers several advantages over traditional clustering algorithms for this task: it requires no a priori specification of the number of clusters, it automatically identifies noise points without arbitrary density thresholds, and its hierarchical nature allows it to find clusters of varying density---an important property when cloud layers at different heights produce disparity clusters with different spreads. Each resulting cluster corresponds to a distinct cloud layer; the cluster centroid disparity is converted to a height estimate via Eq.~(\ref{eq:height}), and the spread of disparities within the cluster provides a natural uncertainty measure. The primary CBH estimate for each frame is taken as the height of the lowest reliable cluster, reflecting the meteorological definition of cloud base.
 
@@ -277,13 +278,6 @@ We have presented a complete pipeline for cloud base height estimation from grou
 \end{enumerate}
 
 Limitations include calibration drift and inability to operate under featureless overcast. Future work will address online recalibration and distributed low-cost CBH monitoring.
-
-\begin{acknowledgments}
-The authors thank the staff of the Meteorological Observatory of M.V. Lomonosov Moscow State University for providing ceilometer data and for maintaining the stereo camera installation.
-\end{acknowledgments}
-
-\section*{FUNDING}
-This work was supported by the M.V. Lomonosov Moscow State University research program.
 
 \section*{CONFLICT OF INTEREST}
 The authors of this work declare that they have no conflicts of interest.

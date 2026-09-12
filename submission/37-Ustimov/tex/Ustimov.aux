@@ -1,22 +1,8 @@
 \relax 
-\providecommand\hyper@newdestlabel[2]{}
 \providecommand\babel@aux[2]{}
 \@nameuse{bbl@beforestart}
 \catcode `"\active 
-\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
-\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
-\global\let\oldcontentsline\contentsline
-\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
-\global\let\oldnewlabel\newlabel
-\gdef\newlabel#1#2{\newlabelxx{#1}#2}
-\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
-\AtEndDocument{\ifx\hyper@anchor\@undefined
-\let\contentsline\oldcontentsline
-\let\newlabel\oldnewlabel
-\fi}
-\fi}
-\global\let\hyper@last\relax 
-\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\hyper@newdestlabel[2]{}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \babel@aux{english}{}
@@ -51,36 +37,36 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Spatial localisation of LoFTR correspondences on the original stereo image pair. Points are colour-coded by their HDBSCAN cluster assignment, illustrating that clusters in disparity space correspond to spatially coherent regions of the cloud field.}}{6}{figure.2}\protected@file@percent }
 \newlabel{fig:localization}{{2}{6}{Spatial localisation of LoFTR correspondences on the original stereo image pair. Points are colour-coded by their HDBSCAN cluster assignment, illustrating that clusters in disparity space correspond to spatially coherent regions of the cloud field}{figure.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}HDBSCAN clustering in disparity space}{6}{section*.9}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces HDBSCAN clustering of LoFTR correspondences in 2D disparity space $(\Delta \xi , \Delta \eta )$ (top) and the derived height distribution per cluster (bottom). Ceilometer reference: 1300~m.}}{7}{figure.3}\protected@file@percent }
-\newlabel{fig:cluster}{{3}{7}{HDBSCAN clustering of LoFTR correspondences in 2D disparity space $(\Delta \xi , \Delta \eta )$ (top) and the derived height distribution per cluster (bottom). Ceilometer reference: 1300~m}{figure.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Spatial Filtering of Clusters}{7}{section*.10}\protected@file@percent }
+\newlabel{sec:spatial}{{4}{7}{}{section*.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Stage 1: DBSCAN sub-clustering in image space}{7}{section*.11}\protected@file@percent }
 \babel@aux{english}{}
 \babel@aux{english}{}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Spatial Filtering of Clusters}{8}{section*.10}\protected@file@percent }
-\newlabel{sec:spatial}{{4}{8}{}{section*.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Stage 1: DBSCAN sub-clustering in image space}{8}{section*.11}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces HDBSCAN clustering of LoFTR correspondences in 2D disparity space $(\Delta \xi , \Delta \eta )$ (top) and the derived height distribution per cluster (bottom). Ceilometer reference: 1300~m.}}{8}{figure.3}\protected@file@percent }
+\newlabel{fig:cluster}{{3}{8}{HDBSCAN clustering of LoFTR correspondences in 2D disparity space $(\Delta \xi , \Delta \eta )$ (top) and the derived height distribution per cluster (bottom). Ceilometer reference: 1300~m}{figure.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Stage 2: Convex-hull density check}{8}{section*.12}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Stage 3: Neighbour-consistency verification}{8}{section*.13}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {5}Adaptive Kalman Filter for Temporal Consistency}{9}{section*.14}\protected@file@percent }
 \newlabel{sec:kalman}{{5}{9}{}{section*.14}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Problem formulation}{9}{section*.15}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Innovation-adaptive measurement covariance}{9}{section*.16}\protected@file@percent }
-\newlabel{eq:adaptive}{{8}{9}{}{equation.5.8}{}}
 \citation{6}
 \babel@aux{english}{}
 \babel@aux{english}{}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparison of cloud base height time-series metrics before and after application of the adaptive Kalman filter. All metrics are computed over the 5-hour validation sequence (May~23, 2025).}}{10}{table.1}\protected@file@percent }
-\newlabel{tab:kalman}{{1}{10}{Comparison of cloud base height time-series metrics before and after application of the adaptive Kalman filter. All metrics are computed over the 5-hour validation sequence (May~23, 2025)}{table.1}{}}
+\newlabel{eq:adaptive}{{8}{10}{}{equation.5.8}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {6}Experimental Results}{10}{section*.17}\protected@file@percent }
 \newlabel{sec:results}{{6}{10}{}{section*.17}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Data acquisition and preprocessing}{10}{section*.18}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Kalman filter performance}{10}{section*.19}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Stitched time series of cloud base height over the 5-hour validation period (May~23, 2025). \textbf  {Top panel:} height time series for the ceilometer (red), raw per-frame stereo estimates (green), and Kalman-filtered stereo estimates (blue). The vertical offset between ceilometer and stereo traces is discussed in Section~\ref  {sec:bias}. \textbf  {Bottom panel:} Pearson correlation coefficient $r$ between the stereo pipeline and the ceilometer in each 30-minute window (orange). Windows with $r > 0.5$ correspond to homogeneous cloud cover; lower correlations occur during transitions and multi-layer conditions.}}{11}{figure.4}\protected@file@percent }
-\newlabel{fig:stitched}{{4}{11}{Stitched time series of cloud base height over the 5-hour validation period (May~23, 2025). \textbf {Top panel:} height time series for the ceilometer (red), raw per-frame stereo estimates (green), and Kalman-filtered stereo estimates (blue). The vertical offset between ceilometer and stereo traces is discussed in Section~\ref {sec:bias}. \textbf {Bottom panel:} Pearson correlation coefficient $r$ between the stereo pipeline and the ceilometer in each 30-minute window (orange). Windows with $r > 0.5$ correspond to homogeneous cloud cover; lower correlations occur during transitions and multi-layer conditions}{figure.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Windowed correlation with dynamic time-shift alignment}{11}{section*.20}\protected@file@percent }
 \citation{6}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Comparison of cloud base height time-series metrics before and after application of the adaptive Kalman filter. All metrics are computed over the 5-hour validation sequence (May~23, 2025).}}{11}{table.1}\protected@file@percent }
+\newlabel{tab:kalman}{{1}{11}{Comparison of cloud base height time-series metrics before and after application of the adaptive Kalman filter. All metrics are computed over the 5-hour validation sequence (May~23, 2025)}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Windowed correlation with dynamic time-shift alignment}{11}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Cluster merge and selection}{11}{section*.21}\protected@file@percent }
 \babel@aux{english}{}
 \babel@aux{english}{}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Cluster merge and selection}{12}{section*.21}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Stitched time series of cloud base height over the 5-hour validation period (May~23, 2025). \textbf  {Top panel:} height time series for the ceilometer (red), raw per-frame stereo estimates (green), and Kalman-filtered stereo estimates (blue). The vertical offset between ceilometer and stereo traces is discussed in Section~\ref {sec:bias}. \textbf  {Bottom panel:} Pearson correlation coefficient $r$ between the stereo pipeline and the ceilometer in each 30-minute window (orange). Windows with $r > 0.5$ correspond to homogeneous cloud cover; lower correlations occur during transitions and multi-layer conditions.}}{12}{figure.4}\protected@file@percent }
+\newlabel{fig:stitched}{{4}{12}{Stitched time series of cloud base height over the 5-hour validation period (May~23, 2025). \textbf {Top panel:} height time series for the ceilometer (red), raw per-frame stereo estimates (green), and Kalman-filtered stereo estimates (blue). The vertical offset between ceilometer and stereo traces is discussed in Section~\ref {sec:bias}. \textbf {Bottom panel:} Pearson correlation coefficient $r$ between the stereo pipeline and the ceilometer in each 30-minute window (orange). Windows with $r > 0.5$ correspond to homogeneous cloud cover; lower correlations occur during transitions and multi-layer conditions}{figure.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Systematic Bias of the Laser Ceilometer}{12}{section*.22}\protected@file@percent }
 \newlabel{sec:bias}{{7}{12}{}{section*.22}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {8}Conclusions}{12}{section*.23}\protected@file@percent }
@@ -89,11 +75,9 @@
 \bibcite{2}{{2}{}{{}}{{}}}
 \bibcite{3}{{3}{}{{}}{{}}}
 \bibcite{4}{{4}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {}CONFLICT OF INTEREST}{13}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {}References}{13}{section*.25}\protected@file@percent }
 \bibcite{5}{{5}{}{{}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {}Acknowledgments}{13}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {}FUNDING}{13}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {}CONFLICT OF INTEREST}{13}{section*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {}References}{13}{section*.27}\protected@file@percent }
 \bibcite{6}{{6}{}{{}}{{}}}
 \bibdata{UstimovNotes}
 \bibstyle{apsrev4-2}
@@ -102,6 +86,6 @@
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
 \babel@aux{english}{}
 \babel@aux{english}{}
-\newlabel{LastBibItem}{{6}{14}{}{section*.27}{}}
+\newlabel{LastBibItem}{{6}{14}{}{section*.25}{}}
 \newlabel{LastPage}{{}{14}{}{}{}}
 \gdef \@abspage@last{14}
