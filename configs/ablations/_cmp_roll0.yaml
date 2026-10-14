@@ -1,0 +1,115 @@
+# =============================================================================
+# clouds — DLCP2026 submission reproduction configuration
+# =============================================================================
+# PURPOSE: Pin every parameter to the values the written work states, so the
+#          DLCP2026 figures can be attempted from an explicit, hashed config
+#          rather than from remembered defaults.
+# INPUTS: none.
+# OUTPUTS: a Config for experiments/reproduce_paper.py --config this-file.
+# KEYWORDS: config, reproduction, paper, dlcp2026
+#
+# Where the written work and the shipped code disagree, the written work wins
+# here and the disagreement is recorded in docs/repro/. Known disagreements:
+#   * crop:      paper 640x640 ; config.py shipped 1920//6 = 320
+#   * strategy:  paper text says 'lowest' ; the submitted figure's legend says
+#                "Raw dominant cluster" (= largest) for the raw series
+#   * window:    paper says 12:00-17:00 MSK ; config.py shipped 11:00-19:00
+#   * jump:      paper Table I calls 515 m the mean, the caption calls it median
+# =============================================================================
+
+# Registry of affine calibrations; each entry records when it was calibrated
+# and which sessions it applies to. Relative paths resolve against this file.
+calibration_dir: calib
+
+vars:
+  data_root: /home/iustimov/clouds_data
+
+project:
+  name: clouds
+  purpose: "DLCP2026 submission reproduction (2025-05-23 validation sequence)"
+
+dataset:
+  images_dir: ${data_root}/images
+  date: "2025-05-23"
+  # The written work: "5-hour sequence (12:00--17:00 MSK)".
+  window_start: "12:00:00"
+  window_end: "17:00:00"
+  image_clock: UTC
+  ceilometer_clock: MSK
+  clock_offset_h: 3.0
+  ceilometer_log: ${data_root}/Звенигород/scilometer/Zve_Sci_250523.txt
+  pair_tolerance_s: 2.0
+
+camera:
+  model: fisheye
+  stereo_base_m: 45.0
+  angle_of_view_deg: 180.0
+  image_width_px: 1920
+  original_size: [1920, 1920]
+  # The written work: "A central 640x640 px crop was used for analysis."
+  # Measured residual roll of camera 2, in degrees (docs/plan/w1-calibration.md W1.13).
+  # +1.5 deg minimises the within-frame disparity IQR (8.14 px -> 1.92 px).
+  roll_correction_deg: 0.0
+  target_size: [640, 640]
+  calibration: 2025-05-22_affine_old
+
+matching:
+  # 4 pairs per GPU forward pass: 1.7x throughput, ~0.1% match difference.
+  batch_size: 4
+  backend: kornia_loftr
+  match_threshold: 0.6
+  filter: null
+
+clustering:
+  min_cluster_size: 3
+  min_samples: 3
+  allow_single_cluster: true
+
+spatial_filter:
+  enabled: true
+  dbscan_eps_px: 30.0
+  dbscan_min_samples: 3
+  density_min: 0.002
+  k_neighbors: 5
+  inconsistency_max: 0.30
+  disparity_std_mult: 2.0
+
+temporal:
+  # The written work reports the single 1-D innovation-adaptive Kalman filter.
+  mode: simple
+  cbh_strategy: lowest
+  sigma_h_accel: 5.0
+  measurement_noise_scale: 50.0
+  # "clusters differing in height by less than 300 m are merged"
+  cluster_merge_height_tol_m: 300.0
+  min_cluster_size_for_tracking: 8
+
+processing:
+  # evaluate            : honest full evaluation vs the ceilometer (tools/evaluate.py)
+  # process_time_series : write per-pair cluster logs only
+  # ablate_homography   : rotation-sensitivity sweep of the calibration
+  # trail               : manual aircraft-trail point analysis
+  task: evaluate
+  # Process every Nth stereo pair. 1 = every pair.
+  stride: 1
+  # Interactive plots. Always false in batch runs.
+  visualize: false
+  # Write per-pair cluster logs next to the run.
+  log_results: true
+
+ablation:
+  # Homography-rotation sensitivity sweep (tools/run_ablation.py).
+  max_noise_theta: 15.0
+  steps: 10
+
+metrics:
+  window_min: 30
+  # The submitted figure is titled "18 x 30min windows stitched"; 30-min windows
+  # with a 15-min hop over 5 h give 19 windows, of which 18 score.
+  hop_min: 15
+  shift_search_s: 300
+  tolerance_s: 10.0
+
+output:
+  logs_dir: ${data_root}/logs
+  assets_dir: ${data_root}/report_assets

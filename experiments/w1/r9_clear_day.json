@@ -1,0 +1,28 @@
+{
+ "2025-05-22": {
+  "date": "2025-05-22",
+  "n_frames_used": 46,
+  "median_blob_area_all": 5855.0,
+  "median_blob_area_used": 14970.0,
+  "azimuth_residual_median_deg": 0.734252962368501,
+  "azimuth_residual_p90_deg": 1.3430762148356195,
+  "f_bias_px_per_rad": 673.8183149348577,
+  "r0_px": 9.514836781111013,
+  "radial_rms_px": 74.65564738291258,
+  "f_through_origin": 683.3236824632307,
+  "A0_deg": 313.64553004673957
+ },
+ "2025-05-23": {
+  "date": "2025-05-23",
+  "n_frames_used": 42,
+  "median_blob_area_all": 2514.5,
+  "median_blob_area_used": 6265.5,
+  "azimuth_residual_median_deg": 1.511811457963944,
+  "azimuth_residual_p90_deg": 4.693093553928531,
+  "f_bias_px_per_rad": 675.5829323124715,
+  "r0_px": -12.394332016660497,
+  "radial_rms_px": 67.54127975255643,
+  "f_through_origin": 662.7863930865201,
+  "A0_deg": 312.8499822916303
+ }
+}

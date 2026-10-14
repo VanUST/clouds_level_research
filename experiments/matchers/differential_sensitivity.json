@@ -1,0 +1,73 @@
+{
+ "kornia LoFTR (default)": {
+  "backend": "kornia_loftr",
+  "cfg": {},
+  "slope": -1.0428211757115025,
+  "scatter_px": 0.11008727602736496,
+  "interior_slope": -1.0328499930245592,
+  "interior_share": 0.3145171522295044,
+  "n_curves": 12,
+  "ms": 1.0921496947606404
+ },
+ "MASt3R conf>=0.5": {
+  "backend": "mast3r",
+  "cfg": {
+   "min_conf": 0.5
+  },
+  "slope": -6.552936935330162e-15,
+  "scatter_px": 3.7914111775644515e-15,
+  "interior_slope": -6.552936935330162e-15,
+  "interior_share": 0.3374364726081753,
+  "n_curves": 12,
+  "ms": 4.682859341303508
+ },
+ "RoMa (cert 0.5)": {
+  "backend": "roma",
+  "cfg": {
+   "grid_stride": 8,
+   "certainty_threshold": 0.5
+  },
+  "slope": -1.0084511893136212,
+  "scatter_px": 0.015857718277373548,
+  "interior_slope": -1.0093750000000064,
+  "interior_share": 0.3273679470709928,
+  "n_curves": 12,
+  "ms": 4.138683060805003
+ },
+ "RoMa (cert 0.05, interiors kept)": {
+  "backend": "roma",
+  "cfg": {
+   "grid_stride": 8,
+   "certainty_threshold": 0.05
+  },
+  "slope": -1.0127579825265132,
+  "scatter_px": 0.016317968912229815,
+  "interior_slope": -1.0173125130789686,
+  "interior_share": 0.3402518296910757,
+  "n_curves": 12,
+  "ms": 4.192121128241221
+ },
+ "DKM": {
+  "backend": "dkm",
+  "cfg": {
+   "grid_stride": 8,
+   "certainty_threshold": 0.5
+  },
+  "slope": -0.9935372488839331,
+  "scatter_px": 0.014497439791950822,
+  "interior_slope": -1.0006367274693098,
+  "interior_share": 0.3097641532131256,
+  "n_curves": 12,
+  "ms": 3.7075223326683044
+ },
+ "EfficientLoFTR": {
+  "backend": "efficient_loftr",
+  "cfg": {},
+  "slope": -1.2988289969308082,
+  "scatter_px": 0.21353623573828595,
+  "interior_slope": -1.3005179268973257,
+  "interior_share": 0.3135567146105041,
+  "n_curves": 12,
+  "ms": 0.5633670488993326
+ }
+}

@@ -1,0 +1,184 @@
+{
+ "correlation_audit": {
+  "level": {
+   "r": -0.3756985321259546,
+   "n": 470,
+   "bootstrap95": [
+    -0.6527099885266503,
+    -0.2616555493378692
+   ]
+  },
+  "diffs_gap_crossing": {
+   "r": -0.24754511263098275,
+   "n": 469,
+   "n_cross_gap": 30
+  },
+  "diffs_contiguous": {
+   "r": -0.04456969746588948,
+   "n": 439,
+   "bootstrap95": [
+    -0.10031700597976284,
+    -0.006969439066743642
+   ]
+  },
+  "grid_s": 30.0,
+  "n_valid_cells": 470
+ },
+ "regime_response": {
+  "full": {
+   "n_lower": 551,
+   "n_upper": 738,
+   "median_lower_m": 1943.6124591090843,
+   "median_upper_m": 1838.9460632271312,
+   "shift_upper_minus_lower_m": -104.66639588195312,
+   "ks_stat": 0.29210501723892013,
+   "ks_p": 3.015391833229781e-24,
+   "n_matches_lower": 23865,
+   "n_matches_upper": 53941,
+   "median_frame_height_iqr_lower_m": 1433.5235437014812,
+   "median_frame_height_iqr_upper_m": 1081.8112530571448,
+   "median_frame_match_count_lower": 716.0,
+   "median_frame_match_count_upper": 1153.5
+  },
+  "r_le_250": {
+   "n_lower": 546,
+   "n_upper": 732,
+   "median_lower_m": 1993.0430180436656,
+   "median_upper_m": 1838.8748733835969,
+   "shift_upper_minus_lower_m": -154.16814466006872,
+   "ks_stat": 0.40638323425208667,
+   "ks_p": 9.789498194413874e-47,
+   "n_matches_lower": 14227,
+   "n_matches_upper": 31960,
+   "median_frame_height_iqr_lower_m": 1097.1856254163813,
+   "median_frame_height_iqr_upper_m": 577.6777410151043,
+   "median_frame_match_count_lower": 359.0,
+   "median_frame_match_count_upper": 554.5
+  },
+  "match_radius_by_regime": {
+   "lower": {
+    "median_px": 227.86922340552292
+   },
+   "upper": {
+    "median_px": 227.68527541207203
+   }
+  }
+ },
+ "selection_diagnosis": {
+  "lowest": {
+   "median_m": 1155.6734395635272,
+   "hourly_medians_msk_12_16": [
+    1162.2249106317731,
+    1193.3302547457854,
+    1163.5781594586451,
+    1123.7773792272535,
+    1142.1391448226923
+   ]
+  },
+  "largest": {
+   "median_m": 1743.9387811323172,
+   "hourly_medians_msk_12_16": [
+    1759.755485253106,
+    1749.1441957649681,
+    1760.5828624637445,
+    1702.8921383695993,
+    1743.6746801554395
+   ]
+  },
+  "median_all": {
+   "median_m": 1877.670089502871,
+   "hourly_medians_msk_12_16": [
+    1834.043700441949,
+    2003.970528256049,
+    1889.278308434747,
+    1872.7256065098666,
+    1847.1420277280818
+   ]
+  },
+  "selected_lowest_cluster": {
+   "n": 1751,
+   "height_median_m": 1155.6734395635272,
+   "height_iqr_m": 88.32212228718299,
+   "radius_median_px": 334.34022138956317,
+   "radius_p90_px": 386.33922917560415,
+   "frac_radius_gt_320px": 0.5870930896630497,
+   "u_median_px": 507.5199890136719,
+   "v_median_px": 45.818180084228516,
+   "share_in_top_60px_position_bin": 0.22615648201027985
+  }
+ },
+ "tail_diagnosis": {
+  "selected_after_symmetric_border": {
+   "symmetric_0px": {
+    "n": 1751,
+    "median_m": 1155.6734395635272
+   },
+   "symmetric_32px": {
+    "n": 1747,
+    "median_m": 1165.7487765925614
+   },
+   "symmetric_64px": {
+    "n": 1724,
+    "median_m": 1207.6088901299468
+   },
+   "symmetric_96px": {
+    "n": 1688,
+    "median_m": 1309.573731497207
+   },
+   "symmetric_128px": {
+    "n": 1661,
+    "median_m": 1485.4029922465595
+   }
+  },
+  "selected_after_top_band_exclusion": {
+   "exclude_top_0px": {
+    "n": 1751,
+    "median_m": 1155.6734395635272
+   },
+   "exclude_top_64px": {
+    "n": 1748,
+    "median_m": 1202.64796209292
+   },
+   "exclude_top_96px": {
+    "n": 1744,
+    "median_m": 1281.6022499043963
+   },
+   "exclude_top_128px": {
+    "n": 1742,
+    "median_m": 1463.408009031448
+   }
+  },
+  "match_height_top_band_v_lt_64_m": {
+   "n": 6554,
+   "median_m": 1181.4866747476076
+  },
+  "match_height_rest_m": {
+   "n": 83357,
+   "median_m": 1911.3537254825787
+  }
+ },
+ "ceilometer_fields": {
+  "file_slots": 2341,
+  "window_slots": 906,
+  "window_h1": 906,
+  "window_h2": 267,
+  "window_l": 0,
+  "window_q": 906,
+  "file_l": 0,
+  "distinct_q_codes": [
+   7,
+   15,
+   22,
+   30,
+   38,
+   45,
+   53,
+   60,
+   68,
+   76,
+   83,
+   91,
+   99
+  ]
+ }
+}

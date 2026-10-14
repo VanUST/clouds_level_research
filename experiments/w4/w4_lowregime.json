@@ -1,0 +1,12 @@
+{
+ "n_low": 215,
+ "rho_perframe": -0.47257313900034215,
+ "p_perframe": 2.325271771459406e-13,
+ "n_eff_estimate": 7.020440255784111,
+ "n_eff_reference": 7.344133585399821,
+ "rho_gridded": -0.5251537695464392,
+ "p_gridded": 0.030412988664352558,
+ "grid_points": 17,
+ "est_spread_m": 1225.3857458614045,
+ "ref_spread_m": 620.0
+}

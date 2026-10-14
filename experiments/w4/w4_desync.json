@@ -1,0 +1,20 @@
+{
+ "n_frames": 371,
+ "motion_median_px": 0.6725008807113486,
+ "rho_motion_dv": 0.0021147397288602404,
+ "p_motion_dv": 0.9676184863582069,
+ "rho_motion_du": -0.021674965984156493,
+ "p_motion_du": 0.6773153174771592,
+ "rho_regime_dv": 0.4474404770079693,
+ "p_regime_dv": 1.155073236375e-19,
+ "motion_low_px": 0.6783989282360052,
+ "motion_high_px": 0.6736425849569914,
+ "dv_low_px": 0.8622360229492188,
+ "dv_high_px": 1.9124679565429688,
+ "implied_speed_mps": 0.2768016852190259,
+ "required_exposure_offset_s": 18.141658120945436,
+ "archive_offset_s": 0.0,
+ "r2_speed": 4.472124120819883e-06,
+ "r2_regime": 0.2002029804651191,
+ "verdict": "REFUTED \u2014 dv does not scale with cloud speed, and the exposure offset the observation would require is inconsistent with the archive's timing; the epipolar violation tracks the height regime instead"
+}

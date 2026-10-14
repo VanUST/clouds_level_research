@@ -1,0 +1,243 @@
+{
+  "run_id": "ab60_ov__ab_batch1",
+  "started_utc": "2026-10-13T11:31:48.908016+00:00",
+  "entry_point": "experiments/w1/opt/ab_evaluate.py",
+  "argv": [
+    "experiments/w1/opt/ab_evaluate.py",
+    "--config",
+    "configs/_ab_batch1.yaml",
+    "--limit",
+    "60",
+    "--mode",
+    "opt",
+    "--out",
+    "experiments/w1/opt/ab60_ov__ab_batch1"
+  ],
+  "run_dir": "experiments/w1/opt/ab60_ov__ab_batch1",
+  "git": {
+    "commit": "9e5ac927d88c4eba6e2cbbf27d9c3cd0977ad411",
+    "branch": "dev",
+    "dirty": true,
+    "dirty_files": 108,
+    "describe": "9e5ac92-dirty"
+  },
+  "python": {
+    "version": "3.12.15",
+    "executable": "/home/iustimov/miniconda3/envs/clouds/bin/python",
+    "platform": "Linux-5.15.0-191-generic-x86_64-with-glibc2.35",
+    "cwd": "/home/iustimov/clouds"
+  },
+  "packages": {
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "torch": "2.14.1",
+    "torchvision": "0.29.1",
+    "kornia": "0.8.3",
+    "opencv-contrib-python": "5.0.0.93",
+    "scikit-learn": "1.9.1",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2",
+    "pillow": "12.3.0",
+    "dtw-python": "1.9.0",
+    "PyYAML": "6.0.3"
+  },
+  "counts": {
+    "n_pairs": 60,
+    "n_frames_processed": 60,
+    "n_frames_with_clusters": 60,
+    "n_no_result": 0,
+    "spatial_rejections": 103,
+    "spatial_clusters_seen": 256
+  },
+  "timings": {},
+  "results": {
+    "n_raw_points": 60,
+    "n_filtered_points": 60,
+    "n_ceilo_points": 906,
+    "smoothing": {
+      "raw": {
+        "mean_dh": 86.96017941717291,
+        "median_dh": 44.991936412047835,
+        "n": 60
+      },
+      "filtered": {
+        "mean_dh": 12.8424831840997,
+        "median_dh": 8.44582110355509,
+        "n": 60
+      },
+      "raw_autocorr": 0.05859125620372466,
+      "filtered_autocorr": 0.9561744331406281,
+      "jump_factor": 6.771290113491326,
+      "autocorr_factor": 16.31940489236078
+    },
+    "raw_windows": {
+      "n_windows": 1,
+      "n_scored": 1,
+      "mean_r": 0.3322920920792105,
+      "frac_gt_half": 0.0,
+      "max_r": 0.3322920920792105
+    },
+    "raw_global_r": -0.013236877953613892,
+    "raw_global_n": 60,
+    "filtered_windows": {
+      "n_windows": 1,
+      "n_scored": 1,
+      "mean_r": 0.8435183484742486,
+      "frac_gt_half": 1.0,
+      "max_r": 0.8435183484742486
+    },
+    "filtered_global_r": -0.19777538206226342,
+    "filtered_global_n": 60
+  },
+  "config": {
+    "path": "/home/iustimov/clouds/configs/_ab_batch1.yaml",
+    "sha256": "1db66b68a1dbe787f3b7f16040752eaa698febd2f21bc4f54c7d5098966ad685",
+    "resolved": {
+      "calibration_dir": "calib",
+      "project": {
+        "name": "clouds",
+        "purpose": "DLCP2026 submission reproduction (2025-05-23 validation sequence)"
+      },
+      "dataset": {
+        "images_dir": "/home/iustimov/clouds_data/images",
+        "date": "2025-05-23",
+        "window_start": "12:00:00",
+        "window_end": "17:00:00",
+        "image_clock": "UTC",
+        "ceilometer_clock": "MSK",
+        "clock_offset_h": 3.0,
+        "ceilometer_log": "/home/iustimov/clouds_data/\u0417\u0432\u0435\u043d\u0438\u0433\u043e\u0440\u043e\u0434/scilometer/Zve_Sci_250523.txt",
+        "pair_tolerance_s": 2.0
+      },
+      "camera": {
+        "model": "fisheye",
+        "stereo_base_m": 45.0,
+        "angle_of_view_deg": 180.0,
+        "image_width_px": 1920,
+        "original_size": [
+          1920,
+          1920
+        ],
+        "roll_correction_deg": 1.5,
+        "target_size": [
+          640,
+          640
+        ],
+        "calibration": "2025-05-22_affine_old"
+      },
+      "matching": {
+        "batch_size": 1,
+        "backend": "kornia_loftr",
+        "match_threshold": 0.6,
+        "filter": null
+      },
+      "clustering": {
+        "min_cluster_size": 3,
+        "min_samples": 3,
+        "cluster_selection_epsilon": 0.0,
+        "allow_single_cluster": true
+      },
+      "spatial_filter": {
+        "enabled": true,
+        "dbscan_eps_px": 30.0,
+        "dbscan_min_samples": 3,
+        "density_min": 0.002,
+        "k_neighbors": 5,
+        "inconsistency_max": 0.3,
+        "disparity_std_mult": 2.0
+      },
+      "temporal": {
+        "mode": "simple",
+        "cbh_strategy": "lowest",
+        "sigma_h_accel": 5.0,
+        "measurement_noise_scale": 50.0,
+        "cluster_merge_height_tol_m": 300.0,
+        "min_cluster_size_for_tracking": 8
+      },
+      "processing": {
+        "task": "evaluate",
+        "stride": 1,
+        "visualize": false,
+        "log_results": true
+      },
+      "ablation": {
+        "max_noise_theta": 15.0,
+        "steps": 10
+      },
+      "metrics": {
+        "window_min": 30,
+        "hop_min": 15,
+        "shift_search_s": 300,
+        "tolerance_s": 10.0
+      },
+      "output": {
+        "logs_dir": "/home/iustimov/clouds_data/logs",
+        "assets_dir": "/home/iustimov/clouds_data/report_assets"
+      }
+    }
+  },
+  "calibration": {
+    "id": "2025-05-22_affine_old",
+    "status": "active",
+    "matrix_2x3": [
+      [
+        0.0014207881638163794,
+        -0.9999989906799874,
+        1972.73673196935
+      ],
+      [
+        0.9999989906799874,
+        0.0014207881638163794,
+        3.6708577729732
+      ]
+    ],
+    "matrix_3x3": [
+      [
+        0.0014207881638163794,
+        -0.9999989906799874,
+        1972.73673196935
+      ],
+      [
+        0.9999989906799874,
+        0.0014207881638163794,
+        3.6708577729732
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "calibrated_on": "2025-05-22",
+    "calibrated_on_source": "inferred_from_artifact_filename",
+    "calibrated_on_verified": false,
+    "method": "sun position; cv2.estimateAffine2D (RANSAC initialisation)",
+    "applies_to_sessions": [
+      "2025-05-22",
+      "2025-05-23"
+    ],
+    "applies_to_sessions_verified": false,
+    "source_artifact": "/home/iustimov/clouds_data/matrix_2025-05-22.npy",
+    "source_artifact_sha256": "ff670a99faef85c7a78c4112b727781d2e3648ad04c8f1a2e1d062ee6a8b4adc",
+    "notes": [
+      "Byte-identical to config.AFFINE_OLD, so this is the matrix the shipped pipeline used.",
+      "The 2025-05-23 session has NO calibration of its own; this 2025-05-22 matrix is applied to it.",
+      "Calibration drift between sessions is documented in the article as up to 30 px (~900 m of height error), so applying a 2025-05-22 matrix to 2025-05-23 data is a known, unquantified error source.",
+      "No calibration log, no source images and no RANSAC residuals were preserved. Date is inferred from the artifact filename only."
+    ]
+  },
+  "dataset": {
+    "date": "2025-05-23",
+    "images_dir": "/home/iustimov/clouds_data/images",
+    "window_start": "12:00:00",
+    "window_end": "17:00:00",
+    "image_clock": "UTC",
+    "ceilometer_clock": "MSK",
+    "clock_offset_h": 3.0,
+    "ceilometer_log": "/home/iustimov/clouds_data/\u0417\u0432\u0435\u043d\u0438\u0433\u043e\u0440\u043e\u0434/scilometer/Zve_Sci_250523.txt",
+    "ceilometer_log_sha256": "e3363084836b99cdfc887ea121d3796d244f2e41aa85db8155a72650fdcc0e69",
+    "pair_tolerance_s": 2.0
+  },
+  "finished_utc": "2026-10-13T11:32:04.411647+00:00",
+  "status": "ok"
+}

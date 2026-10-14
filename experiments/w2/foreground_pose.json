@@ -1,0 +1,33 @@
+{
+ "2025-05-22": {
+  "n_ok": 2,
+  "n_pairs": 12,
+  "median_inliers": 26.5,
+  "median_rotation_from_identity_deg": 154.08918979751317,
+  "median_epipolar_rms_sin": 1.3291487132097468,
+  "median_t": [
+   -0.38115043853100294,
+   0.13732362762627998,
+   0.88306971333915
+  ],
+  "reasons": {
+   "too few foreground matches": 10
+  }
+ },
+ "2025-05-23": {
+  "n_ok": 2,
+  "n_pairs": 12,
+  "median_inliers": 25.5,
+  "median_rotation_from_identity_deg": 17.332014662970693,
+  "median_epipolar_rms_sin": 1.5392629615659086,
+  "median_t": [
+   -0.18000262473962406,
+   -0.05912618505157777,
+   0.00990721614128598
+  ],
+  "reasons": {
+   "too few foreground matches": 10
+  }
+ },
+ "translation_drift_deg": 86.02981168874616
+}

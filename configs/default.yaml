@@ -1,0 +1,126 @@
+# =============================================================================
+# clouds — default configuration
+# =============================================================================
+# PURPOSE: Single source of truth for every tunable of the cloud-base-height
+#          pipeline. Loaded by src/clouds/config.py and hashed into the run
+#          manifest, so any result can be tied back to the exact parameters,
+#          dataset, time base and calibration that produced it.
+# INPUTS: none (declarative).
+# OUTPUTS: a validated Config object (see src/clouds/config.py).
+# KEYWORDS: config, yaml, provenance, calibration, dataset
+#
+# Values prefixed with ${...} are substituted from the [vars] section.
+# Every path is absolute so a run does not depend on the working directory.
+# =============================================================================
+
+vars:
+  # All measurement data lives outside the code checkout. Nothing under this
+  # root is version-controlled.
+  data_root: /home/iustimov/clouds_data
+
+project:
+  name: clouds
+  # Text recorded verbatim in the run manifest to explain what a run was for.
+  purpose: "default pipeline run"
+
+dataset:
+  images_dir: ${data_root}/images
+  # Calendar day to process. REQUIRED: images_dir holds more than one session.
+  date: "2025-05-23"
+
+  # Wall-clock window applied to the IMAGE FILENAME clock (see image_clock).
+  window_start: "11:00:00"
+  window_end: "19:00:00"
+
+  # The two instruments do not share a clock. The image filename clock is UTC
+  # (verified physically: the diurnal brightness envelope of the 2025-05-23
+  # sequence runs 00:45 -> 18:15, matching Zvenigorod sunrise/sunset of
+  # ~04:00/21:00 MSK shifted by exactly -3 h). The DOL-2 log labels its stamps
+  # MSK. All analysis windows are therefore expressed in the ceilometer clock
+  # and converted to the filename clock by subtracting clock_offset_h.
+  image_clock: UTC
+  ceilometer_clock: MSK
+  clock_offset_h: 3.0
+
+  ceilometer_log: ${data_root}/Звенигород/scilometer/Zve_Sci_250523.txt
+
+  # Two frames from the two cameras whose filename stamps differ by up to this
+  # many seconds are treated as one stereo pair. The cameras are consistently
+  # ~1 s apart, and exact-name pairing discards ~5% of frames.
+  pair_tolerance_s: 2.0
+
+camera:
+  model: fisheye            # fisheye | pinhole
+  stereo_base_m: 45.0
+  angle_of_view_deg: 180.0
+  image_width_px: 1920      # frame width used by the height<->disparity relation
+  original_size: [1920, 1920]
+  # Centre crop actually fed to the matcher. NOTE: the article states 640x640,
+  # while config.py shipped 320x320 (1920//6). At 640 the spatial-filter
+  # rejection rate (15.4%) falls inside the article's stated 15-25% band and
+  # the filtered autocorrelation matches; at 320 it does not. Set explicitly.
+  target_size: [640, 640]
+  f_px_per_rad: 654.0
+  field_radius_px: 300.0
+  distortion_a: -0.30
+  exact_triangulation: true
+  calibration: 2025-05-22_affine_old
+
+matching:
+  # RoMa is the default: it is the only candidate that is both sub-pixel accurate on
+  # the disparity and covering of cloud interiors. See docs/plan/matchers.md.
+  # certainty_threshold is deliberately low: RoMa's low-certainty interior
+  # predictions were measured accurate (0.68 px against the reliable field), so the
+  # certainty is used as a weight rather than a hard filter, and rejecting clear sky
+  # is the geometry's job (a cloud layer is a coherent disparity mode).
+  backend: roma
+  params:
+    grid_stride: 8
+    certainty_threshold: 0.05
+  match_threshold: 0.6
+  filter: null
+clustering:
+  min_cluster_size: 3
+  min_samples: 3
+  allow_single_cluster: true
+
+
+temporal:
+  # simple   = single 1-D Kalman on the selected cluster (used operationally)
+  # multi_track = 7-DOF multi-layer tracker with Hungarian association
+  mode: simple
+  # largest | lowest | lowest_reliable
+  cbh_strategy: lowest_mode
+  sigma_h_accel: 5.0
+  measurement_noise_scale: 50.0
+  cluster_merge_height_tol_m: 300.0
+  min_cluster_size_for_tracking: 8
+
+processing:
+  # evaluate            : honest full evaluation vs the ceilometer (tools/evaluate.py)
+  # process_time_series : write per-pair cluster logs only
+  # ablate_homography   : rotation-sensitivity sweep of the calibration
+  # trail               : manual aircraft-trail point analysis
+  task: evaluate
+  # Process every Nth stereo pair. 1 = every pair.
+  stride: 1
+  # Interactive plots. Always false in batch runs.
+  visualize: false
+  # Write per-pair cluster logs next to the run.
+  log_results: true
+
+ablation:
+  # Homography-rotation sensitivity sweep (tools/run_ablation.py).
+  max_noise_theta: 15.0
+  steps: 10
+
+metrics:
+  # Windowed alignment analysis vs the ceilometer.
+  window_min: 30
+  hop_min: 15
+  shift_search_s: 300
+  tolerance_s: 10.0
+
+output:
+  logs_dir: ${data_root}/logs
+  assets_dir: ${data_root}/report_assets

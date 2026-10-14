@@ -1,0 +1,31 @@
+{
+  "id": "2025-05-22_affine_old",
+  "status": "active",
+  "matrix_2x3": [
+    [0.0014207881638163794, -0.9999989906799874, 1972.73673196935],
+    [0.9999989906799874, 0.0014207881638163794, 3.6708577729732]
+  ],
+  "matrix_3x3": [
+    [0.0014207881638163794, -0.9999989906799874, 1972.73673196935],
+    [0.9999989906799874, 0.0014207881638163794, 3.6708577729732],
+    [0.0, 0.0, 1.0]
+  ],
+  "rotation_deg": 89.919,
+  "translation_px": [1972.74, 3.67],
+  "calibrated_on": "2025-05-22",
+  "calibrated_on_source": "inferred_from_artifact_filename",
+  "calibrated_on_verified": false,
+  "method": "sun position; cv2.estimateAffine2D (RANSAC initialisation)",
+  "method_source": "inferred from article text (kalibrovka po polozheniyu solntsa) and from source_artifact",
+  "applies_to_sessions": ["2025-05-22", "2025-05-23"],
+  "applies_to_sessions_verified": false,
+  "source_artifact": "/home/iustimov/clouds_data/matrix_2025-05-22.npy",
+  "source_artifact_sha256": "ff670a99faef85c7a78c4112b727781d2e3648ad04c8f1a2e1d062ee6a8b4adc",
+  "equals_config_constant": "AFFINE_OLD",
+  "notes": [
+    "Byte-identical to config.AFFINE_OLD, so this is the matrix the shipped pipeline used.",
+    "The 2025-05-23 session has NO calibration of its own; this 2025-05-22 matrix is applied to it.",
+    "Calibration drift between sessions is documented in the article as up to 30 px (~900 m of height error), so applying a 2025-05-22 matrix to 2025-05-23 data is a known, unquantified error source.",
+    "No calibration log, no source images and no RANSAC residuals were preserved. Date is inferred from the artifact filename only."
+  ]
+}

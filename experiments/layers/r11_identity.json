@@ -1,0 +1,12 @@
+{
+ "n_frames": 167,
+ "r_halves": 0.9811430006991811,
+ "null_mean": -0.0017085082848574784,
+ "null_p95": 0.0514559942760941,
+ "p": 0.0,
+ "verdict": "STATIC MAP: the height is largely a property of image position",
+ "spatial_std_m": 173.40213628350472,
+ "cell_temporal_iqr_m": 62.5025634765625,
+ "ratio_space_time": 2.774320390051327,
+ "frame_median_std_m": 215.16920471191406
+}

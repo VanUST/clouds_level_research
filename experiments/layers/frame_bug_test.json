@@ -1,0 +1,51 @@
+{
+ "H=1000|crop centre (what the code uses)": {
+  "median_h": 1000.0000000000255,
+  "bias_pct": 2.546585164964199e-12,
+  "u_gradient_m": 4.249546215447593e-11
+ },
+ "H=1000|true c2 (alignment condition)": {
+  "median_h": 996.8581825927224,
+  "bias_pct": -0.31418174072775856,
+  "u_gradient_m": -173.31493819447812
+ },
+ "H=1500|crop centre (what the code uses)": {
+  "median_h": 1500.0000000000707,
+  "bias_pct": 4.714214204189678e-12,
+  "u_gradient_m": -5.2832683127678666e-11
+ },
+ "H=1500|true c2 (alignment condition)": {
+  "median_h": 1493.434478104456,
+  "bias_pct": -0.4377014597029302,
+  "u_gradient_m": -250.76455880689616
+ },
+ "H=1800|crop centre (what the code uses)": {
+  "median_h": 1800.0000000001132,
+  "bias_pct": 6.290671687262754e-12,
+  "u_gradient_m": -7.2250926637798804e-12
+ },
+ "H=1800|true c2 (alignment condition)": {
+  "median_h": 1791.3802543530628,
+  "bias_pct": -0.4788747581631772,
+  "u_gradient_m": -297.8759189164015
+ },
+ "H=3000|crop centre (what the code uses)": {
+  "median_h": 3000.0000000003974,
+  "bias_pct": 1.3248306155825654e-11,
+  "u_gradient_m": 1.7329429208092964e-10
+ },
+ "H=3000|true c2 (alignment condition)": {
+  "median_h": 2983.1633567028057,
+  "bias_pct": -0.5612214432398105,
+  "u_gradient_m": -488.50434848266264
+ },
+ "verdict": "the wrong principal point does NOT materially bias the height",
+ "c2_true": [
+  1014.1016575538258,
+  965.0338454630249
+ ],
+ "residual_px": [
+  54.10165755382582,
+  5.033845463024882
+ ]
+}

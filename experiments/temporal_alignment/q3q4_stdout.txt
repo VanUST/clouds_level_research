@@ -1,0 +1,57 @@
+
+=== filtered: advection baseline fit ===
+windows merged: 20
+fitted baseline |r| = 1759 m   R2 = 0.099   null R2 median = 0.036, p = 0.177
+implied lag: {
+ "speed_p10_mps": 2.8851131796530947,
+ "speed_median_mps": 3.3303024468697346,
+ "speed_p90_mps": 4.989457101933789,
+ "sep_for_median_shift_m": 682.7120016082956,
+ "sep_for_max_shift_m": 999.0907340609203,
+ "lag_at_50m_s": 15.013651401840908,
+ "lag_at_250m_s": 75.06825700920454,
+ "lag_at_1000m_s": 300.2730280368182,
+ "lag_at_2000m_s": 600.5460560736364
+}
+sequence diagnostics (this merged sequence): {
+ "lag1_autocorr": 0.10170896017390069,
+ "mean_abs_jump_s": 229.73684210526315,
+ "median_abs_jump_s": 230.0,
+ "frac_jump_gt_200s": 0.5789473684210527,
+ "max_abs_jump_s": 600.0
+}
+
+=== raw: advection baseline fit ===
+windows merged: 20
+fitted baseline |r| = 829 m   R2 = 0.018   null R2 median = 0.036, p = 0.712
+implied lag: {
+ "speed_p10_mps": 2.8851131796530947,
+ "speed_median_mps": 3.3303024468697346,
+ "speed_p90_mps": 4.989457101933789,
+ "sep_for_median_shift_m": 716.015026076993,
+ "sep_for_max_shift_m": 999.0907340609203,
+ "lag_at_50m_s": 15.013651401840908,
+ "lag_at_250m_s": 75.06825700920454,
+ "lag_at_1000m_s": 300.2730280368182,
+ "lag_at_2000m_s": 600.5460560736364
+}
+sequence diagnostics (this merged sequence): {
+ "lag1_autocorr": -0.1065873655714526,
+ "mean_abs_jump_s": 252.89473684210526,
+ "median_abs_jump_s": 200.0,
+ "frac_jump_gt_200s": 0.47368421052631576,
+ "max_abs_jump_s": 585.0
+}
+
+=== pipeline best-shift sequence smoothness (both runs) ===
+  roll-corrected raw (pipeline): {"lag1_autocorr": -0.1065873655714526, "mean_abs_jump_s": 252.89473684210526, "median_abs_jump_s": 200.0, "frac_jump_gt_200s": 0.47368421052631576, "max_abs_jump_s": 585.0}
+  roll-corrected filt (pipeline): {"lag1_autocorr": 0.10170896017390069, "mean_abs_jump_s": 229.73684210526315, "median_abs_jump_s": 230.0, "frac_jump_gt_200s": 0.5789473684210527, "max_abs_jump_s": 600.0}
+  roll=0 raw (pipeline): {"lag1_autocorr": 0.03870244507253281, "mean_abs_jump_s": 184.73684210526315, "median_abs_jump_s": 150.0, "frac_jump_gt_200s": 0.3157894736842105, "max_abs_jump_s": 595.0}
+
+=== roll-corrected vs roll=0 best-shift agreement (raw) ===
+{
+ "frac_identical": 0.2,
+ "mean_abs_diff_s": 168.5,
+ "corr": 0.34410165278841265
+}
+figure written: /home/iustimov/clouds/experiments/temporal_alignment/q3_q4_lag_advection.png

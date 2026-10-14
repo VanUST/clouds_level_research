@@ -1,0 +1,30 @@
+{
+  "id": "2025-05-22_affine_new",
+  "status": "alternative",
+  "matrix_2x3": [
+    [0.0249, -0.9997, 1931.7],
+    [0.9997, 0.0249, -20.8]
+  ],
+  "matrix_3x3": [
+    [0.0249, -0.9997, 1931.7],
+    [0.9997, 0.0249, -20.8],
+    [0.0, 0.0, 1.0]
+  ],
+  "rotation_deg": 88.573,
+  "translation_px": [1931.7, -20.8],
+  "calibrated_on": null,
+  "calibrated_on_source": "unknown",
+  "calibrated_on_verified": false,
+  "method": "unknown; stated in config.py as an alternative calibration",
+  "applies_to_sessions": ["2025-05-22", "2025-05-23"],
+  "applies_to_sessions_verified": false,
+  "source_artifact": "config.py constant AFFINE_NEW",
+  "source_artifact_sha256": null,
+  "equals_config_constant": "AFFINE_NEW",
+  "notes": [
+    "Only four significant figures are preserved; provenance, date and source images are lost.",
+    "Differs from model-old by 1.35 deg of rotation and 41 px of translation.",
+    "In the 320 px and 640 px centre crops the two matrices produce visually indistinguishable rectification, so neither is preferred by inspection.",
+    "run_comparison.py exists solely to sweep between this matrix and model-old."
+  ]
+}

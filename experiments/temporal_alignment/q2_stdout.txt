@@ -1,0 +1,37 @@
+  200 pairs through 2025-05-23T09:33:14
+  400 pairs through 2025-05-23T10:06:36
+  600 pairs through 2025-05-23T10:39:58
+  800 pairs through 2025-05-23T11:13:19
+  1000 pairs through 2025-05-23T11:46:41
+  1200 pairs through 2025-05-23T12:20:02
+  1400 pairs through 2025-05-23T12:53:24
+  1600 pairs through 2025-05-23T13:26:45
+
+pairs: 1798
+speed m/s: median 3.27 mean 3.53 p10 2.02 p90 6.03 std 1.55
+image angle deg: circular mean 213.3  circular std 9.0
+per-pair patch scatter: median spread 4.62 px, median IQR 4.59 px
+single-plane fit rms px: median 3.88  p90 8.10  (field rigidity)
+cross-check vs phase correlation (all n=1798): Pearson r 0.042
+cross-check, high phase response (>0.5, n=410): ratio block/phase median 1.142  Pearson r 0.290
+  12:00 MSK  n=180  speed  2.93+-1.32 m/s  angle  226.3 (circstd  5.2)  height 1851 m
+  12:15 MSK  n=180  speed  3.04+-0.89 m/s  angle  223.1 (circstd  6.5)  height 1899 m
+  12:30 MSK  n=180  speed  3.45+-0.61 m/s  angle  217.5 (circstd  2.3)  height 1876 m
+  12:45 MSK  n=180  speed  3.74+-1.29 m/s  angle  215.7 (circstd  4.1)  height 1882 m
+  13:00 MSK  n=180  speed  4.50+-1.21 m/s  angle  209.4 (circstd  6.2)  height 1954 m
+  13:15 MSK  n=180  speed  4.99+-1.52 m/s  angle  206.2 (circstd  5.9)  height 1958 m
+  13:30 MSK  n=180  speed  3.10+-2.71 m/s  angle  210.1 (circstd 12.1)  height 1908 m
+  13:45 MSK  n=180  speed  1.12+-1.31 m/s  angle  216.2 (circstd 13.1)  height 1826 m
+  14:00 MSK  n=180  speed  2.45+-1.55 m/s  angle  213.7 (circstd  9.5)  height 1811 m
+  14:15 MSK  n=180  speed  3.39+-0.34 m/s  angle  208.7 (circstd  2.9)  height 1827 m
+  14:30 MSK  n=180  speed  3.15+-0.23 m/s  angle  211.5 (circstd  2.7)  height 1793 m
+  14:45 MSK  n=179  speed  3.11+-0.13 m/s  angle  214.8 (circstd  2.5)  height 1789 m
+  15:00 MSK  n=179  speed  3.20+-0.11 m/s  angle  216.5 (circstd  0.6)  height 1807 m
+  15:15 MSK  n=180  speed  3.40+-0.70 m/s  angle  216.0 (circstd  4.1)  height 1830 m
+  15:30 MSK  n=180  speed  4.51+-1.44 m/s  angle  210.4 (circstd  8.2)  height 1877 m
+  15:45 MSK  n=180  speed  5.74+-1.11 m/s  angle  208.2 (circstd  7.4)  height 1980 m
+  16:00 MSK  n=180  speed  5.02+-1.38 m/s  angle  215.4 (circstd  6.6)  height 1939 m
+  16:15 MSK  n=180  speed  3.31+-1.01 m/s  angle  212.4 (circstd  9.0)  height 1782 m
+  16:30 MSK  n=179  speed  2.98+-0.54 m/s  angle  202.4 (circstd  5.8)  height 1773 m
+  16:45 MSK  n= 89  speed  3.35+-0.53 m/s  angle  199.8 (circstd  3.0)  height 1808 m
+figure written: /home/iustimov/clouds/experiments/temporal_alignment/q2_cloud_motion.png

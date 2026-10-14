@@ -1,0 +1,48 @@
+# PURPOSE: Single source of truth for the w2 foreground-geometry diagnostic.
+#          Values are the measured ones recorded in docs/plan/, not defaults.
+# KEYWORDS: config, w2, foreground, geometry_diagnostic
+experiment:
+  name: "w2_foreground_geometry_diagnostic"
+  purpose: "Is the static spatial pattern instrumental (fixable) or climatic?"
+  preregistration: "experiments/w2/PREREGISTRATION.md"
+
+data:
+  images_dir: "/home/iustimov/clouds_data/images"
+  session_diagnostic: "2025-05-22"
+  session_measurement: "2025-05-23"
+  image_clock: "UTC"
+
+camera:
+  image_size: 1920
+  principal_point: [960.0, 960.0]
+  f_assumed: 611.15
+  f_sun: 654.0
+  f_sun_uncertainty: 11.0
+  distortion_a: -0.30
+  baseline_m: 45.0
+
+foreground:
+  # The rigid structures (brick building, roof panels, lattice mast) all lie below
+  # this row in the 1920x1920 frame. The pipeline's 640x640 crop ends at row 1280,
+  # so the control is OUTSIDE the processed region by construction.
+  v_min: 1560
+  min_inliers: 50
+  max_epipolar_rms_deg: 2.0
+  min_frames_required: 5
+  ransac_threshold: 0.01
+  match_ratio_test: 0.75
+
+matcher:
+  backend: "roma"
+  grid_stride: 8
+  certainty_threshold: 0.05
+  device: "cuda"
+
+diagnostic:
+  collapse_threshold_ratio: 0.5
+  significance_level: 0.05
+  min_matches_per_frame: 30
+  polynomial_order: 3
+
+output:
+  run_dir: "experiments/w2"

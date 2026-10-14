@@ -1,0 +1,17 @@
+{
+ "2025-05-22": {
+  "unusable": true,
+  "n_frames": 0,
+  "n_matches": 0
+ },
+ "2025-05-23": {
+  "model_roll_median_deg": -1.5749999999999997,
+  "model_roll_std_deg": 0.09849982774848895,
+  "model_roll_min_deg": -1.7499999999999998,
+  "model_roll_max_deg": -1.3499999999999996,
+  "spread_optimum_deg": 1.6924500419554356,
+  "iqr_uncorrected_px": 8.144866943359375,
+  "iqr_corrected_px": 1.916780671693914,
+  "n_frames": 38
+ }
+}

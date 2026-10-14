@@ -3,3 +3,13 @@ old/
 logs/
 *.vscode*
 data/
+# Derived artefacts.
+# The measurement data lives outside the checkout (~/clouds_data) and is never versioned.
+# These are intermediate products of the scripts under experiments/: match and motion
+# dumps, run cluster logs and profiler output. They are large (166 MB of .npz alone) and
+# every one is regenerable by re-running its script against the measurement data, so they
+# do not belong in the history. The small .json results ARE the evidence and are kept.
+*.npz
+*.jsonl
+*.prof
+*.pyc

@@ -1,0 +1,9 @@
+{
+ "n_frames": 167,
+ "modes_per_frame_hist": {
+  "1": 133,
+  "2": 34
+ },
+ "primary_median_m": 1675.0,
+ "primary_step_median_m": 50.0
+}

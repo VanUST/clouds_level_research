@@ -1,0 +1,26 @@
+{
+ "as shipped (paraxial, ideal lens)": {
+  "clusters": 162332,
+  "inner_m": 1910.8033349485058,
+  "outer_m": 1706.525498108976,
+  "ratio": 0.893093217337809,
+  "profile_iqr_m": 76.8368193358342,
+  "flatness_pct": 4.113454394016518
+ },
+ "exact triangulation, ideal lens": {
+  "clusters": 162221,
+  "inner_m": 1815.1906375994436,
+  "outer_m": 1265.8834202250541,
+  "ratio": 0.6973831805893191,
+  "profile_iqr_m": 308.92542298683907,
+  "flatness_pct": 19.1244522442462
+ },
+ "exact + distortion a=-0.30": {
+  "clusters": 162213,
+  "inner_m": 1873.2607795484778,
+  "outer_m": 1782.2573490410696,
+  "ratio": 0.9514197748114156,
+  "profile_iqr_m": 43.88697382687451,
+  "flatness_pct": 2.3572347203790045
+ }
+}

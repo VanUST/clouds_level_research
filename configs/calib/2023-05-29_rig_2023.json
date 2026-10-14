@@ -1,0 +1,30 @@
+{
+  "id": "2023-05-29_rig_2023",
+  "status": "historical_not_applicable",
+  "matrix_2x3": [
+    [0.9954, 0.0424, 129.0],
+    [-0.0202, 0.9810, -28.0]
+  ],
+  "matrix_3x3": [
+    [0.9954, 0.0424, 129.0],
+    [-0.0202, 0.9810, -28.0],
+    [0.0, 0.0, 1.0]
+  ],
+  "rotation_deg": 2.44,
+  "translation_px": [129.0, -28.0],
+  "calibrated_on": "2023-05-29",
+  "calibrated_on_source": "stated_in_article",
+  "calibrated_on_verified": false,
+  "method": "sun position; cv2.estimateAffine2D with RANSAC",
+  "applies_to_sessions": ["2023-05", "2023-06", "2023-07"],
+  "applies_to_sessions_verified": false,
+  "source_artifact": "paper_source/kursach.tex, equation (4) / submission/37-Ustimov/tex/Ustimov.tex",
+  "source_artifact_sha256": null,
+  "equals_config_constant": null,
+  "notes": [
+    "This is the matrix quoted in the written work, WITH A NEAR-IDENTITY rotation (2.4 deg).",
+    "It does NOT belong to the 2025 fisheye rig, whose matrices rotate by ~90 deg (cameras mounted rotated).",
+    "Recorded so that the article's quoted matrix is not confused with the matrices the code actually applies.",
+    "Any result attributed to this matrix must state the different rig and the 2023 acquisition dates."
+  ]
+}

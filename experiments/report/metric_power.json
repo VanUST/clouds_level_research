@@ -1,0 +1,16 @@
+{
+ "n_eff_algo": 18.794554556269745,
+ "n_eff_ceilo": 50.8584195409767,
+ "decorrelation_s": 949.2111104090354,
+ "decorrelation_algo_s": 949.2111104090354,
+ "decorrelation_ceilo_s": 266.917456785353,
+ "grid_s": 960.0,
+ "r_fixed": -0.5170489355620058,
+ "n_pairs": 19,
+ "p": 0.0,
+ "null_abs_mean": 0.16400893915720238,
+ "raw_grid30_r": -0.3756985321259546,
+ "raw_grid30_n": 470,
+ "raw_diff_r": -0.24754511263098275,
+ "filtered_diff_r": -0.40873170341055415
+}

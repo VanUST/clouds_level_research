@@ -1,0 +1,10 @@
+{
+ "n_low": 215,
+ "n_high": 120,
+ "resid_low_px": 0.047023773193359375,
+ "resid_high_px": 0.04068565368652344,
+ "ratio": 0.8652145696438712,
+ "disparity_diff_px": 1.784820556640625,
+ "mw_p": 0.00035824647032061443,
+ "verdict": "BOTH REGIMES ARE EQUALLY COHERENT \u2014 the disparity difference is a real displacement of the matching solution, not admitted noise"
+}

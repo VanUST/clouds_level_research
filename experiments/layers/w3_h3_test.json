@@ -1,0 +1,12 @@
+{
+ "n_frames": 167,
+ "n_low": 64,
+ "n_high": 83,
+ "r_between_regimes": 0.3714827807741619,
+ "null_mean": 0.0006291733905924433,
+ "null_p95": 0.0564878772027428,
+ "r_within_regime_control": 0.7182582069716028,
+ "median_du_low": 14.204742431640625,
+ "median_du_high": 15.236038208007812,
+ "verdict": "MIXED \u2014 the pattern partially follows the regime"
+}

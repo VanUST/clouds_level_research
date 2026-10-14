@@ -1,0 +1,18 @@
+{
+ "n_frames": 232,
+ "n_low": 107,
+ "n_high": 89,
+ "matches_per_frame_median": 2627.0,
+ "loftr_shift_along_px": 0.274658203125,
+ "loftr_ci95": [
+  0.11185836791992188,
+  0.4012451171875
+ ],
+ "loftr_shift_across_px": 0.1454925537109375,
+ "loftr_du_low": 14.291351318359375,
+ "loftr_du_high": 14.566009521484375,
+ "roma_shift_along_px": 1.798,
+ "same_sign": true,
+ "ci_excludes_zero": true,
+ "verdict": "MATCHER-INDEPENDENT \u2014 an independent matcher sees a shift in the same direction with a CI excluding zero; the phenomenon is a property of the imagery, not of RoMa"
+}

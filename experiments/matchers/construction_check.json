@@ -1,0 +1,42 @@
+[
+ {
+  "applied": 0.15,
+  "phase_recovered": 0.2045393002165099,
+  "centroid_shift": 0.002173955395306848
+ },
+ {
+  "applied": 0.35,
+  "phase_recovered": 0.37982068935684765,
+  "centroid_shift": 0.013368186510746227
+ },
+ {
+  "applied": 0.5,
+  "phase_recovered": 0.48876210034410406,
+  "centroid_shift": 0.031506392586436505
+ },
+ {
+  "applied": 0.65,
+  "phase_recovered": 0.6363545539174424,
+  "centroid_shift": 0.04949133028992492
+ },
+ {
+  "applied": 0.85,
+  "phase_recovered": 0.8071205642673647,
+  "centroid_shift": 0.06088809754942304
+ },
+ {
+  "applied": 1.35,
+  "phase_recovered": 1.4175925024356388,
+  "centroid_shift": 0.07938858447448638
+ },
+ {
+  "applied": 2.45,
+  "phase_recovered": 2.159047571580828,
+  "centroid_shift": 0.15271673958434917
+ },
+ {
+  "applied": 5.0,
+  "phase_recovered": 5.008536827570651,
+  "centroid_shift": 0.3363337435912115
+ }
+]

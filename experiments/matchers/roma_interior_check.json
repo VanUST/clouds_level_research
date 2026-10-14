@@ -1,0 +1,140 @@
+{
+ "rows": [
+  {
+   "frame": "img-2025-05-23T10-00-06",
+   "n_high": 4128,
+   "n_low_interior": 3769,
+   "median_certainty_high": 0.759261965751648,
+   "median_certainty_low": 0.008129382506012917,
+   "median_resid_px": 0.61553955078125,
+   "median_resid_null_px": 6.376068115234375,
+   "cross_matcher_resid_px": 0.6338052749633789,
+   "cross_matcher_n": 586
+  },
+  {
+   "frame": "img-2025-05-23T10-00-16",
+   "n_high": 4931,
+   "n_low_interior": 3776,
+   "median_certainty_high": 0.7832993268966675,
+   "median_certainty_low": 0.002435645554214716,
+   "median_resid_px": 0.712738037109375,
+   "median_resid_null_px": 7.2115936279296875,
+   "cross_matcher_resid_px": 0.75091552734375,
+   "cross_matcher_n": 858
+  },
+  {
+   "frame": "img-2025-05-23T10-00-26",
+   "n_high": 4479,
+   "n_low_interior": 3800,
+   "median_certainty_high": 0.7634260058403015,
+   "median_certainty_low": 0.002082518534734845,
+   "median_resid_px": 0.6069793701171875,
+   "median_resid_null_px": 7.209718704223633,
+   "cross_matcher_resid_px": 0.6341552734375,
+   "cross_matcher_n": 732
+  },
+  {
+   "frame": "img-2025-05-23T10-00-36",
+   "n_high": 4835,
+   "n_low_interior": 3778,
+   "median_certainty_high": 0.7995587587356567,
+   "median_certainty_low": 0.0022788094356656075,
+   "median_resid_px": 0.674072265625,
+   "median_resid_null_px": 7.468008041381836,
+   "cross_matcher_resid_px": 0.6461029052734375,
+   "cross_matcher_n": 760
+  },
+  {
+   "frame": "img-2025-05-23T10-00-46",
+   "n_high": 4245,
+   "n_low_interior": 3837,
+   "median_certainty_high": 0.7743126749992371,
+   "median_certainty_low": 0.004530471749603748,
+   "median_resid_px": 0.6804275512695312,
+   "median_resid_null_px": 7.211578369140625,
+   "cross_matcher_resid_px": 0.6737747192382812,
+   "cross_matcher_n": 510
+  },
+  {
+   "frame": "img-2025-05-23T10-00-56",
+   "n_high": 4572,
+   "n_low_interior": 3798,
+   "median_certainty_high": 0.7978179454803467,
+   "median_certainty_low": 0.0024690956342965364,
+   "median_resid_px": 0.6795654296875,
+   "median_resid_null_px": 7.2397613525390625,
+   "cross_matcher_resid_px": 0.5998687744140625,
+   "cross_matcher_n": 675
+  },
+  {
+   "frame": "img-2025-05-23T10-01-06",
+   "n_high": 4782,
+   "n_low_interior": 3761,
+   "median_certainty_high": 0.8101828098297119,
+   "median_certainty_low": 0.0024401231203228235,
+   "median_resid_px": 0.64947509765625,
+   "median_resid_null_px": 6.871723175048828,
+   "cross_matcher_resid_px": 0.5294342041015625,
+   "cross_matcher_n": 734
+  },
+  {
+   "frame": "img-2025-05-23T10-01-16",
+   "n_high": 4890,
+   "n_low_interior": 3678,
+   "median_certainty_high": 0.7979321479797363,
+   "median_certainty_low": 0.0027670878916978836,
+   "median_resid_px": 0.6641311645507812,
+   "median_resid_null_px": 6.981781005859375,
+   "cross_matcher_resid_px": 0.6958084106445312,
+   "cross_matcher_n": 700
+  },
+  {
+   "frame": "img-2025-05-23T10-01-26",
+   "n_high": 4355,
+   "n_low_interior": 3754,
+   "median_certainty_high": 0.7685064673423767,
+   "median_certainty_low": 0.0074605438858270645,
+   "median_resid_px": 0.7218475341796875,
+   "median_resid_null_px": 7.064170837402344,
+   "cross_matcher_resid_px": 0.532196044921875,
+   "cross_matcher_n": 549
+  },
+  {
+   "frame": "img-2025-05-23T10-01-36",
+   "n_high": 4431,
+   "n_low_interior": 3725,
+   "median_certainty_high": 0.7695039510726929,
+   "median_certainty_low": 0.0063621290028095245,
+   "median_resid_px": 0.7136192321777344,
+   "median_resid_null_px": 6.7733154296875,
+   "cross_matcher_resid_px": 0.55999755859375,
+   "cross_matcher_n": 521
+  },
+  {
+   "frame": "img-2025-05-23T10-01-47",
+   "n_high": 4212,
+   "n_low_interior": 3766,
+   "median_certainty_high": 0.7647411823272705,
+   "median_certainty_low": 0.005242135375738144,
+   "median_resid_px": 0.7064743041992188,
+   "median_resid_null_px": 6.534393310546875,
+   "cross_matcher_resid_px": 0.6144027709960938,
+   "cross_matcher_n": 507
+  },
+  {
+   "frame": "img-2025-05-23T10-01-56",
+   "n_high": 3893,
+   "n_low_interior": 3802,
+   "median_certainty_high": 0.7461004853248596,
+   "median_certainty_low": 0.005864497274160385,
+   "median_resid_px": 0.8252716064453125,
+   "median_resid_null_px": 6.546630859375,
+   "cross_matcher_resid_px": 0.5994873046875,
+   "cross_matcher_n": 487
+  }
+ ],
+ "median_resid_px": 0.6799964904785156,
+ "median_resid_null_px": 7.022975921630859,
+ "cross_matcher_resid_px": 0.6241040229797363,
+ "verdict": "USABLE - they agree with the reliable field"
+}

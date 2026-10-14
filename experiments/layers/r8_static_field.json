@@ -1,0 +1,18 @@
+{
+ "n_frames": 167,
+ "static_std_px": 0.8371931481852519,
+ "static_mean_px": 15.216538177210408,
+ "cell_temporal_iqr_px": 1.1713752746582031,
+ "space_time_ratio": 0.7147095950352353,
+ "model_rms_px": {
+  "constant": 0.8371931481852519,
+  "linear u": 0.4860733944836404,
+  "linear v": 0.8129883306127669,
+  "radial r": 0.7256870225126983,
+  "r^2": 0.7253901913319877,
+  "radial cubic r^3": 0.7335582772114955,
+  "tangential (roll)": 0.816823072623012
+ },
+ "radial_only_rms_px": 0.723780022109821,
+ "full_model_rms_px": 0.16802732077834776
+}

@@ -1,0 +1,14 @@
+{
+ "n_frames": 116,
+ "within_rho_gmag_dv": 0.11662498576813815,
+ "within_rho_gmag_du": 0.002010956420333632,
+ "within_rho_bright_du": -0.17605384344868108,
+ "within_rho_bright_dv": 0.24003750503202997,
+ "rho_perpcos_absdv": -0.00010167902573526373,
+ "p_perpcos_absdv": 0.9058880911143824,
+ "within_frame_brightness_disparity_span_px": 2.709104537963867,
+ "cross_regime_effect_px": 1.798,
+ "brightness_low": 107.0,
+ "brightness_high": 124.0,
+ "verdict": "PHOTOMETRIC COUPLING PRESENT \u2014 the disparity tracks brightness/gradient within a single frame"
+}

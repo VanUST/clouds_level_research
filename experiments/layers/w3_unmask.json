@@ -1,0 +1,21 @@
+{
+ "raw": {
+  "n": 162,
+  "median_h": 1992.158836096526,
+  "std_h": 247.449889085546,
+  "rho": -0.546513964796558,
+  "p": 5.357189327960828e-14,
+  "regime_shift_m": -128.716784660352,
+  "sign": "INVERTED"
+ },
+ "instrumental_removed": {
+  "n": 162,
+  "median_h": 1960.7924523681938,
+  "std_h": 230.3342023504101,
+  "rho": -0.5806333293222629,
+  "p": 5.54857453826452e-16,
+  "regime_shift_m": -163.56364371240284,
+  "sign": "INVERTED"
+ },
+ "verdict": "THE SIGN STAYS INVERTED \u2014 the inversion is in the matched population, not the calibration; no geometric correction fixes it"
+}

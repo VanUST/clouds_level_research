@@ -1,0 +1,71 @@
+{
+ "n_raw_points": 100,
+ "n_filtered_points": 100,
+ "n_ceilo_points": 906,
+ "smoothing": {
+  "raw": {
+   "mean_dh": 115.03063562372685,
+   "median_dh": 27.640218792647147,
+   "n": 100
+  },
+  "filtered": {
+   "mean_dh": 12.113413057672515,
+   "median_dh": 6.834423611091552,
+   "n": 100
+  },
+  "raw_autocorr": 0.2105824180950865,
+  "filtered_autocorr": 0.9468211357701503,
+  "jump_factor": 9.496137469766838,
+  "autocorr_factor": 4.4962022201807095
+ },
+ "raw_windows": {
+  "n_windows": 2,
+  "n_scored": 1,
+  "mean_r": 0.19455128162581017,
+  "frac_gt_half": 0.0,
+  "max_r": 0.19455128162581017
+ },
+ "raw_windows_detail": [
+  {
+   "start": "2025-05-23T12:00:02",
+   "n_algo": 100,
+   "n_ceilo": 65,
+   "best_shift": -300,
+   "r": 0.19455128162581017
+  },
+  {
+   "start": "2025-05-23T12:15:02",
+   "n_algo": 10,
+   "n_ceilo": 55,
+   "best_shift": 0,
+   "r": null
+  }
+ ],
+ "raw_global_r": -0.41591655581764253,
+ "raw_global_n": 93,
+ "filtered_windows": {
+  "n_windows": 2,
+  "n_scored": 1,
+  "mean_r": 0.7670212061098801,
+  "frac_gt_half": 1.0,
+  "max_r": 0.7670212061098801
+ },
+ "filtered_windows_detail": [
+  {
+   "start": "2025-05-23T12:00:02",
+   "n_algo": 100,
+   "n_ceilo": 65,
+   "best_shift": 300,
+   "r": 0.7670212061098801
+  },
+  {
+   "start": "2025-05-23T12:15:02",
+   "n_algo": 10,
+   "n_ceilo": 55,
+   "best_shift": 0,
+   "r": null
+  }
+ ],
+ "filtered_global_r": -0.5841609202401288,
+ "filtered_global_n": 93
+}

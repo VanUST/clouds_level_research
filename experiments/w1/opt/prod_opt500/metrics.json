@@ -1,0 +1,127 @@
+{
+ "n_raw_points": 500,
+ "n_filtered_points": 500,
+ "n_ceilo_points": 906,
+ "smoothing": {
+  "raw": {
+   "mean_dh": 65.26340925468018,
+   "median_dh": 28.37734118712592,
+   "n": 500
+  },
+  "filtered": {
+   "mean_dh": 14.405501656617378,
+   "median_dh": 7.0089343164788716,
+   "n": 500
+  },
+  "raw_autocorr": 0.3132847589064284,
+  "filtered_autocorr": 0.9739842466129259,
+  "jump_factor": 4.530450296723994,
+  "autocorr_factor": 3.108942324589224
+ },
+ "raw_windows": {
+  "n_windows": 6,
+  "n_scored": 6,
+  "mean_r": 0.3317581767781057,
+  "frac_gt_half": 0.3333333333333333,
+  "max_r": 0.5356694220178343
+ },
+ "raw_windows_detail": [
+  {
+   "start": "2025-05-23T12:00:02",
+   "n_algo": 180,
+   "n_ceilo": 65,
+   "best_shift": -300,
+   "r": 0.2052852393964741
+  },
+  {
+   "start": "2025-05-23T12:15:02",
+   "n_algo": 180,
+   "n_ceilo": 55,
+   "best_shift": 245,
+   "r": 0.5204869900250061
+  },
+  {
+   "start": "2025-05-23T12:30:02",
+   "n_algo": 180,
+   "n_ceilo": 110,
+   "best_shift": 260,
+   "r": 0.326626150016511
+  },
+  {
+   "start": "2025-05-23T12:45:02",
+   "n_algo": 180,
+   "n_ceilo": 103,
+   "best_shift": -190,
+   "r": 0.11819119337609334
+  },
+  {
+   "start": "2025-05-23T13:00:02",
+   "n_algo": 140,
+   "n_ceilo": 98,
+   "best_shift": -295,
+   "r": 0.2842900658367155
+  },
+  {
+   "start": "2025-05-23T13:15:02",
+   "n_algo": 50,
+   "n_ceilo": 107,
+   "best_shift": 275,
+   "r": 0.5356694220178343
+  }
+ ],
+ "raw_global_r": -0.20193565207230746,
+ "raw_global_n": 382,
+ "filtered_windows": {
+  "n_windows": 6,
+  "n_scored": 6,
+  "mean_r": 0.4466701659775521,
+  "frac_gt_half": 0.5,
+  "max_r": 0.8136427226736853
+ },
+ "filtered_windows_detail": [
+  {
+   "start": "2025-05-23T12:00:02",
+   "n_algo": 180,
+   "n_ceilo": 65,
+   "best_shift": 300,
+   "r": 0.6682299528820165
+  },
+  {
+   "start": "2025-05-23T12:15:02",
+   "n_algo": 180,
+   "n_ceilo": 55,
+   "best_shift": 205,
+   "r": 0.8136427226736853
+  },
+  {
+   "start": "2025-05-23T12:30:02",
+   "n_algo": 180,
+   "n_ceilo": 110,
+   "best_shift": 205,
+   "r": 0.34164177864370177
+  },
+  {
+   "start": "2025-05-23T12:45:02",
+   "n_algo": 180,
+   "n_ceilo": 103,
+   "best_shift": -160,
+   "r": -0.08695884925984539
+  },
+  {
+   "start": "2025-05-23T13:00:02",
+   "n_algo": 140,
+   "n_ceilo": 98,
+   "best_shift": 200,
+   "r": 0.2740444572140162
+  },
+  {
+   "start": "2025-05-23T13:15:02",
+   "n_algo": 50,
+   "n_ceilo": 107,
+   "best_shift": 185,
+   "r": 0.669420933711738
+  }
+ ],
+ "filtered_global_r": -0.17392279834719546,
+ "filtered_global_n": 382
+}
