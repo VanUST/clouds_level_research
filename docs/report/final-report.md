@@ -135,6 +135,22 @@ The shift is **−297 m** in the reported height while the reference rises **+15
 Rank correlation with the reference is **−0.547 (p = 4e−14)**; a correct estimator requires a
 positive sign.
 
+**Important qualification, added after the W9 cross-validation.** The inversion is
+**estimator-dependent**. Under 5-fold cross-validation, in which every statistic is fitted on
+four fifths of the session and scored on the held-out fifth:
+
+| estimator | out-of-sample level ρ | sign |
+|---|---|---|
+| **lowest prominent mode** | **+0.171, and +0.287 with a per-cell + linear correction** | **correct** |
+| median | −0.409 | inverted |
+| 25th percentile | −0.296 | inverted |
+
+**The inversion is a property of the median-like statistics on which it was measured, not of
+the disparity field as a whole.** The mode estimator is correctly signed out of sample. This
+does not rescue the instrument — no statistic recovers the *dynamics* (below) — but the
+anomaly as previously described applies to a specific class of statistic and the report
+should say so.
+
 ### 2.2 The signature
 
 The anomaly is not a translation of the disparity distribution. It is a **reshape**:
@@ -244,9 +260,14 @@ mechanisms.
 
 **No dynamic tracking is claimed.**
 
-> **LIMITATION (dynamics).** Within the low regime the estimator's variation is
-> **anti-correlated** with the reference: ρ = −0.473 (p = 2.3e−13) per frame, −0.525
-> (p = 0.030) on a grid at the slower series' decorrelation time. The effective sample size
+> **LIMITATION (dynamics).** Under 5-fold cross-validation, **no correction recovers the
+> dynamics**: across six correction families and three estimators (including a free offset
+> per 20 × 20 px cell plus a plane, fitted on 80 % of frames and scored on the other 20 %)
+> the first-difference correlation lies in **[−0.166, +0.168]** with no consistent sign, and
+> the best level correction *worsens* it (+0.061 uncorrected against −0.034). Within the low
+> regime the estimator's variation is **anti-correlated** with the reference for
+> median-like statistics: ρ = −0.473 (p = 2.3e−13) per frame, −0.525 (p = 0.030) on a grid
+> at the slower series' decorrelation time. The effective sample size
 > is **7** (nominal 215, lag-1 ρ ≈ 0.94), so the study is underpowered and no finer structure
 > should be claimed. To elevate a dynamics claim, either direction, requires a session long
 > enough to yield ≥30 independent samples of both series, and an independent motion

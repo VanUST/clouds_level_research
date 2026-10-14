@@ -1924,3 +1924,45 @@ non-Lambertian photometry · photometric superposition · phase aliasing.
 
 **The cause of the inversion remains unattributed.** No analysis-side mechanism tested
 accounts for it.
+
+---
+
+# W9 — STATIC FIELD DIAGNOSED, AND A CROSS-VALIDATED REMOVAL SEARCH (2026-10-15)
+
+Full record: `experiments/w9/W9_RESULT.md`. Scripts: `experiments/w9/w9_cv.py`.
+
+## The diagnostic: u, not radius
+| predictor | r | R² |
+|---|---|---|
+| **u** | **+0.814** | **0.663** |
+| cos(angle) | +0.767 | 0.588 |
+| **radius r** | **+0.499** | **0.249** |
+
+**A linear gradient in u accounts for 66 % of the static field's variance; radius accounts
+for 25 %.** The radial profile is monotone (14.51 → 16.57 px, +14 %), but it is largely a
+consequence of the u-gradient. And the radial structure **largely cancels in height**:
+after the measured corrections, corr(radius, height) = **−0.146**, with a **3 %** median-height
+spread across the radius against the disparity's 14 %.
+
+## The search: 6 corrections × 3 estimators × 5-fold, out of sample
+| correction | estimator | LEVEL ρ | DYNAMICS ρ |
+|---|---|---|---|
+| **per-cell+linear** | **mode** | **+0.287** | −0.034 |
+| none (baseline) | mode | +0.171 | +0.061 |
+| none | median | **−0.409** | +0.126 |
+
+### Finding 1 — the sign depends on the estimator, and this corrects the record
+The **mode** estimator is **correctly signed** out of sample (+0.171 → +0.287). The **median**
+and p25 are **inverted** (−0.41, −0.30). The project's "inversion" was measured on
+median-like statistics; it is a property of *those* statistics, not of the disparity field as
+a whole. **This must be carried into `final-report.md` §2.**
+
+### Finding 2 — no correction recovers the dynamics
+Across all eighteen combinations the dynamics ρ lies in **[−0.166, +0.168]** with no
+consistent sign. The best level correction *worsens* the dynamics (−0.034 vs +0.061
+uncorrected).
+
+**The static field is partly removable; removing it does not recover the dynamics.** The
+anomaly cannot be described as "a static field masking a real signal" without qualification —
+an expressive correction does not reveal the signal, and the possibility that the disparity
+variation carries no information at this footprint ratio is not excluded.

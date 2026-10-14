@@ -1,0 +1,186 @@
+{
+ "results": {
+  "none|median": {
+   "correction": "none",
+   "estimator": "median",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.4094933458471327,
+   "level_rho_std": 0.05173528063222772,
+   "dynamics_rho": 0.12584104242009747,
+   "dynamics_rho_std": 0.06809283726695042,
+   "n_folds": 5
+  },
+  "none|mode": {
+   "correction": "none",
+   "estimator": "mode",
+   "sign_convention": "positive rho = correct",
+   "level_rho": 0.17084537907855799,
+   "level_rho_std": 0.18679264354371075,
+   "dynamics_rho": 0.06126498306266405,
+   "dynamics_rho_std": 0.10868073521878692,
+   "n_folds": 5
+  },
+  "none|p25": {
+   "correction": "none",
+   "estimator": "p25",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.29624180165752395,
+   "level_rho_std": 0.038800833651872105,
+   "dynamics_rho": 0.12462037671549546,
+   "dynamics_rho_std": 0.10237537637609694,
+   "n_folds": 5
+  },
+  "per-cell|median": {
+   "correction": "per-cell",
+   "estimator": "median",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.4218477696660826,
+   "level_rho_std": 0.05848677845318972,
+   "dynamics_rho": 0.11964671934820434,
+   "dynamics_rho_std": 0.0642196902329304,
+   "n_folds": 5
+  },
+  "per-cell|mode": {
+   "correction": "per-cell",
+   "estimator": "mode",
+   "sign_convention": "positive rho = correct",
+   "level_rho": 0.1794196999411625,
+   "level_rho_std": 0.20075581007950657,
+   "dynamics_rho": 0.011278284287437454,
+   "dynamics_rho_std": 0.079561690727849,
+   "n_folds": 5
+  },
+  "per-cell|p25": {
+   "correction": "per-cell",
+   "estimator": "p25",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.34155440290241196,
+   "level_rho_std": 0.0474844506805689,
+   "dynamics_rho": 0.12350794032559231,
+   "dynamics_rho_std": 0.10844262233760955,
+   "n_folds": 5
+  },
+  "per-cell+linear|median": {
+   "correction": "per-cell+linear",
+   "estimator": "median",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.42373863259041106,
+   "level_rho_std": 0.06501961399760074,
+   "dynamics_rho": 0.10589260442724532,
+   "dynamics_rho_std": 0.06233533269974205,
+   "n_folds": 5
+  },
+  "per-cell+linear|mode": {
+   "correction": "per-cell+linear",
+   "estimator": "mode",
+   "sign_convention": "positive rho = correct",
+   "level_rho": 0.2866702308207565,
+   "level_rho_std": 0.18112000937284956,
+   "dynamics_rho": -0.034097224947714035,
+   "dynamics_rho_std": 0.05334765073042344,
+   "n_folds": 5
+  },
+  "per-cell+linear|p25": {
+   "correction": "per-cell+linear",
+   "estimator": "p25",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.40661732436256315,
+   "level_rho_std": 0.03203917371743423,
+   "dynamics_rho": 0.1469711319509844,
+   "dynamics_rho_std": 0.08734098838230285,
+   "n_folds": 5
+  },
+  "per-radius|median": {
+   "correction": "per-radius",
+   "estimator": "median",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.41182389121880625,
+   "level_rho_std": 0.053185789778926094,
+   "dynamics_rho": 0.12318154627885539,
+   "dynamics_rho_std": 0.0738949386952398,
+   "n_folds": 5
+  },
+  "per-radius|mode": {
+   "correction": "per-radius",
+   "estimator": "mode",
+   "sign_convention": "positive rho = correct",
+   "level_rho": 0.14856533470879046,
+   "level_rho_std": 0.19586068019062633,
+   "dynamics_rho": -0.04155670607550875,
+   "dynamics_rho_std": 0.10146898376984742,
+   "n_folds": 5
+  },
+  "per-radius|p25": {
+   "correction": "per-radius",
+   "estimator": "p25",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.2965068206538472,
+   "level_rho_std": 0.03638073889548165,
+   "dynamics_rho": 0.12466198719607421,
+   "dynamics_rho_std": 0.10203818534675833,
+   "n_folds": 5
+  },
+  "linear|median": {
+   "correction": "linear",
+   "estimator": "median",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.4288398775146556,
+   "level_rho_std": 0.060430567379094274,
+   "dynamics_rho": 0.12183022779622805,
+   "dynamics_rho_std": 0.05579147836918966,
+   "n_folds": 5
+  },
+  "linear|mode": {
+   "correction": "linear",
+   "estimator": "mode",
+   "sign_convention": "positive rho = correct",
+   "level_rho": 0.19394230724175227,
+   "level_rho_std": 0.24772649184261816,
+   "dynamics_rho": -0.1662738720065813,
+   "dynamics_rho_std": 0.1134873745257671,
+   "n_folds": 5
+  },
+  "linear|p25": {
+   "correction": "linear",
+   "estimator": "p25",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.38136286657894664,
+   "level_rho_std": 0.03568713386003027,
+   "dynamics_rho": 0.16810703443430403,
+   "dynamics_rho_std": 0.07294076197835087,
+   "n_folds": 5
+  },
+  "cell-smooth|median": {
+   "correction": "cell-smooth",
+   "estimator": "median",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.4200658909377024,
+   "level_rho_std": 0.05769801398378872,
+   "dynamics_rho": 0.12161182592597124,
+   "dynamics_rho_std": 0.06141822650040694,
+   "n_folds": 5
+  },
+  "cell-smooth|mode": {
+   "correction": "cell-smooth",
+   "estimator": "mode",
+   "sign_convention": "positive rho = correct",
+   "level_rho": 0.1472557924954882,
+   "level_rho_std": 0.17046107019362042,
+   "dynamics_rho": -0.16054525443390502,
+   "dynamics_rho_std": 0.17079236332392234,
+   "n_folds": 5
+  },
+  "cell-smooth|p25": {
+   "correction": "cell-smooth",
+   "estimator": "p25",
+   "sign_convention": "positive rho = correct",
+   "level_rho": -0.3363730724249679,
+   "level_rho_std": 0.0478419545052105,
+   "dynamics_rho": 0.1294929350659197,
+   "dynamics_rho_std": 0.10383240241174886,
+   "n_folds": 5
+  }
+ },
+ "k_folds": 5,
+ "verdict": "NO CORRECTION PRODUCES POSITIVE OUT-OF-SAMPLE DYNAMICS: every operation searched leaves the series anti-correlated or uncorrelated with the reference on held-out folds"
+}
