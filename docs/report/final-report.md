@@ -146,10 +146,26 @@ four fifths of the session and scored on the held-out fifth:
 | 25th percentile | −0.296 | inverted |
 
 **The inversion is a property of the median-like statistics on which it was measured, not of
-the disparity field as a whole.** The mode estimator is correctly signed out of sample. This
-does not rescue the instrument — no statistic recovers the *dynamics* (below) — but the
-anomaly as previously described applies to a specific class of statistic and the report
-should say so.
+the disparity field as a whole.** The mode estimator is correctly signed out of sample.
+
+**The mechanism is a change in the distribution's shape, and it is measured.** Between
+regimes:
+
+| quantity | low regime | high regime | change |
+|---|---|---|---|
+| median | 12.354 px | 13.960 px | **+13.0 %** |
+| **mode** | 12.896 px | 11.371 px | **−11.8 %** |
+| **skewness** | **2.268** | **0.731** | **−67.8 %** |
+| **standard deviation** | 4.303 | 4.283 | **−0.5 %** |
+
+**The median and the mode move in opposite directions while the dispersion is unchanged.**
+The distribution does not widen between regimes; it **changes shape**, its skewness
+collapsing by 68 %. A statistic tracking the bulk (the mode) and one tracking cumulative mass
+(the median) *must* diverge when skewness changes. This is not a defect of either statistic —
+it is what order statistics do to a distribution whose shape is not fixed, and it is why the
+synthetic control passed for `lowest_mode` while `lowest` failed: the synthetic cloud's
+disparity distribution has a fixed shape across heights, so only the tail-sensitive rule is
+biased.
 
 ### 2.2 The signature
 
@@ -260,14 +276,25 @@ mechanisms.
 
 **No dynamic tracking is claimed.**
 
-> **LIMITATION (dynamics).** Under 5-fold cross-validation, **no correction recovers the
-> dynamics**: across six correction families and three estimators (including a free offset
-> per 20 × 20 px cell plus a plane, fitted on 80 % of frames and scored on the other 20 %)
-> the first-difference correlation lies in **[−0.166, +0.168]** with no consistent sign, and
-> the best level correction *worsens* it (+0.061 uncorrected against −0.034). Within the low
-> regime the estimator's variation is **anti-correlated** with the reference for
-> median-like statistics: ρ = −0.473 (p = 2.3e−13) per frame, −0.525 (p = 0.030) on a grid
-> at the slower series' decorrelation time. The effective sample size
+> **LIMITATION (dynamics) — the binding limit of this study.** Under 5-fold cross-validation
+> no additive correction recovers the dynamics: across six correction families and three
+> estimators the per-frame first-difference correlation lies in **[−0.166, +0.168]** with no
+> consistent sign. At a **300 s binning**, however, the same data yields a consistent
+> correctly-signed correlation — median **−0.409 (p = 0.038)**, with **nine of eleven**
+> statistics correctly signed and the five central ones averaging **−0.369** — which does
+> **not** survive correction for 22 tests (Bonferroni threshold 0.00227).
+>
+> **The obstacle is sample size, not absence.** The reference decorrelates over ~267 s, so
+> 27 bins hold **n_eff = 17.7 independent samples**, and the smallest detectable |ρ| at
+> p = 0.05 is **≈ 0.47**. The observed −0.37 lies **below the detection floor of the
+> design**. Establishing a correlation of 0.37 at 80 % power requires **n_eff ≈ 55** — roughly
+> a threefold longer session, or a reference that decorrelates faster.
+>
+> So the honest statement is not "the instrument has no dynamic capability" but **"the
+> dynamic signal, if present, is at or below what this session can detect."** Within the low
+> regime, for median-like statistics, the measured variation is anti-correlated with the
+> reference (ρ = −0.473 per frame, −0.525 on a matched grid), which is the inversion again
+> and is subject to the same statistic-dependence. The effective sample size
 > is **7** (nominal 215, lag-1 ρ ≈ 0.94), so the study is underpowered and no finer structure
 > should be claimed. To elevate a dynamics claim, either direction, requires a session long
 > enough to yield ≥30 independent samples of both series, and an independent motion
@@ -316,6 +343,11 @@ a validated instrument. What remains is not another hypothesis but a **controlle
 3. **A footprint-matched reference.** A radar or scanning lidar colocated with the cameras
    would remove the 200:1 sampling mismatch that makes a level comparison between a point
    column and a 2 km area hard to interpret at all.
+4. **A session long enough to detect ±0.37.** The dynamics question is sample-limited, not
+   signal-limited: **n_eff = 17.7** against a requirement of **≈ 55** for a correlation of
+   0.37 at 80 % power. A threefold longer session — or several pooled — would convert the
+   present "below the detection floor" into either a detection or a genuine absence, and
+   that is the cheapest decisive experiment remaining.
 
 ---
 
