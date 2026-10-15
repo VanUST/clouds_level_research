@@ -5,6 +5,7 @@ Four kinds of document, kept separate because they answer different questions.
 | Directory | Question it answers | Author |
 |---|---|---|
 | [`results/`](results/README.md) | **Paper-usable results index** — each result with the artefact and command that reproduces it. |
+| **[`report/final-findings.html`](report/final-findings.html)** | **New findings** — the static-field diagnosis, the cross-validated correction search, the shape mechanism, and the detection floor, with four amendments to the record. |
 | **[`report/final.html`](report/final.html)** | **The final report, rendered** — figures embedded, self-contained, opens in a browser. |
 | [`report/final-report.md`](report/final-report.md) | **The final report** — a validated instrument, twelve pre-registered refutations, and a bounded null result. Start here for the science. |
 | [`briefing.md`](briefing.md) | **Self-contained briefing for an external consultation** — task, data, instruments, algorithm, calibration, processing, validation, findings, and the specific questions asked of a supervisor. |

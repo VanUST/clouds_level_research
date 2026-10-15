@@ -114,6 +114,6 @@ The exact figures, from the Fisher-z relation for a two-sided test at p = 0.05:
 The binned series spans 27 × 300 s = 2.25 h and yields n_eff = 17.7, i.e. **one independent
 sample per 456 s of elapsed time**. Reaching n_eff = 60 therefore needs
 
-**2.25 h × (60.3 / 17.7) ≈ 7.7 h of binned data** — about **8 hours**, not the ">15 hours"
+**2.25 h × (60.3 / 17.75) ≈ 7.6 h of binned data** — about **8 hours**, not the ">15 hours"
 proposed in review. The correction is a factor of two, and it makes the decisive experiment
 cheaper than it appeared.
