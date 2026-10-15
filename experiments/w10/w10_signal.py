@@ -7,8 +7,8 @@
 #              no dynamics in it to recover.
 #
 #          (B) THE SHAPE MECHANISM. W9 found the level correlation is correctly signed for
-#              the MODE (+0.287 out of sample) and inverted for the MEDIAN and p25 (-0.409,
-#              -0.296). The proposed explanation is that the disparity distribution's SHAPE
+#              the MODE (+0.202 out of sample, blocked+embargo) and inverted for the MEDIAN
+#              and p25 (-0.386, -0.296). The proposed explanation is that the disparity distribution's SHAPE
 #              changes between regimes - the high regime is more skewed and heavier-tailed -
 #              and that quantile statistics move with the shape while the mode does not.
 #              That is directly measurable: compare skewness, kurtosis and the percentile
@@ -93,12 +93,25 @@ def main():
     series = [(x.time, x.h1) for x in C.parse_ceilometer_log(LOG) if x.h1 is not None]
 
     def ref_at(t):
+        """Nearest ceilometer sample within 120 s - retained only for the per-frame path."""
         best, bd = None, None
         for tt, hh in series:
             dd = abs((tt - t).total_seconds())
             if bd is None or dd < bd:
                 best, bd = hh, dd
         return best if (bd is not None and bd <= 120) else None
+
+    def ref_bin(t0, t1, min_n=3):
+        """The MEDIAN of the reference over a bin's time span.
+
+        The first version took the single sample nearest the bin START. With 300 s bins
+        against a reference that decorrelates over ~267 s, the value at the start is not
+        the value over the bin, and the mismatch injects noise into every correlation
+        below. A bin with fewer than `min_n` samples returns None rather than a value
+        resting on one or two readings.
+        """
+        vals = [hh for tt, hh in series if t0 <= tt < t1]
+        return float(np.median(vals)) if len(vals) >= min_n else None
 
     # --- bin frames, then pool the matches inside each bin ---------------------------
     bins = {}
@@ -123,7 +136,7 @@ def main():
         if len(du) < MIN_MATCHES:
             continue
         t = dt.datetime.fromtimestamp(key * BIN_S)
-        r = ref_at(t)
+        r = ref_bin(t, t + dt.timedelta(seconds=BIN_S))
         if r is None:
             continue
         s = stats_of(du)

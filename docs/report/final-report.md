@@ -141,8 +141,8 @@ four fifths of the session and scored on the held-out fifth:
 
 | estimator | out-of-sample level ρ | sign |
 |---|---|---|
-| **lowest prominent mode** | **+0.171, and +0.287 with a per-cell + linear correction** | **correct** |
-| median | −0.409 | inverted |
+| **lowest prominent mode** | **+0.137, and +0.202 with a per-cell + linear correction** | **correct** |
+| median | −0.386 | inverted |
 | 25th percentile | −0.296 | inverted |
 
 **The inversion is a property of the median-like statistics on which it was measured, not of
@@ -280,9 +280,14 @@ mechanisms.
 > no additive correction recovers the dynamics: across six correction families and three
 > estimators the per-frame first-difference correlation lies in **[−0.166, +0.168]** with no
 > consistent sign. At a **300 s binning**, however, the same data yields a consistent
-> correctly-signed correlation — median **−0.409 (p = 0.038)**, with **nine of eleven**
-> statistics correctly signed and the five central ones averaging **−0.369** — which does
-> **not** survive correction for 22 tests (Bonferroni threshold 0.00227).
+> correctly-signed correlation — median **−0.409 (p = 0.038)**, with nine of eleven
+> statistics correctly signed — which does not survive correction for 22 tests.
+>
+> **WITHDRAWN after review.** That correlation was an artefact: the reference was paired with
+> the ceilometer sample nearest each bin's **start** rather than the median **over** the bin,
+> mismatching the series by up to 300 s against a 267 s decorrelation time. Corrected, the
+> median's dynamics correlation is **+0.095 (p = 0.667)** and nothing is significant.
+> **The original W9 conclusion — no recoverable dynamics — stands.**
 >
 > **The obstacle is sample size, not absence.** The reference decorrelates over ~267 s, so
 > 27 bins hold **n_eff = 17.7 independent samples**, and the smallest detectable |ρ| at

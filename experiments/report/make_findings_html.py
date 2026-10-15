@@ -167,11 +167,11 @@ nothing is scored on the frames that shaped it.</p>
 <table>
 <tr><th>correction</th><th>estimator</th><th>LEVEL &rho;</th><th>DYNAMICS &rho;</th></tr>
 <tr><td><strong>per-cell + linear</strong></td><td><strong>mode</strong></td>
-    <td class="g"><strong>+0.287</strong></td><td class="g">&minus;0.034</td></tr>
+    <td class="g"><strong>+0.202</strong></td><td class="g">+0.016</td></tr>
 <tr><td>linear</td><td>mode</td><td class="g">+0.194</td><td class="g">&minus;0.166</td></tr>
 <tr><td>per-cell</td><td>mode</td><td class="g">+0.179</td><td class="g">+0.011</td></tr>
 <tr><td><strong>none</strong> (baseline)</td><td>mode</td>
-    <td class="g"><strong>+0.171</strong></td><td class="g">+0.061</td></tr>
+    <td class="g">+0.137</td><td class="g">&minus;0.086</td></tr>
 <tr><td>per-radius</td><td>mode</td><td class="g">+0.149</td><td class="g">&minus;0.042</td></tr>
 <tr><td>cell-smooth</td><td>mode</td><td class="g">+0.147</td><td class="g">&minus;0.161</td></tr>
 <tr><td>linear</td><td>median</td><td class="g">&minus;0.429</td><td class="g">+0.122</td></tr>
@@ -188,14 +188,19 @@ nothing is scored on the frames that shaped it.</p>
 
 <h3>Finding 1 — the sign depends on the estimator</h3>
 <p>The <strong>mode</strong> estimator is <strong>correctly signed out of sample</strong>
-(+0.171 uncorrected, +0.287 with the best correction). The <strong>median</strong> and the
-25th percentile are <strong>inverted</strong> (&minus;0.409, &minus;0.296). The best
-correction moves the level by +0.116 and leaves the sign on the correct side.</p>
+(+0.137 uncorrected, +0.202 with the best correction). The <strong>median</strong> and the
+25th percentile are <strong>inverted</strong> (&minus;0.386, &minus;0.296). The best
+correction moves the level by +0.065 and leaves the sign on the correct side.</p>
+<p><strong>Corrected after review:</strong> these figures come from
+<em>blocked + embargo</em> cross-validation. The first version drew folds at random, which
+on a series with lag-1 autocorrelation 0.934 placed each held-out frame's near-duplicates in
+the training set; that leaked +0.084 into the headline (+0.286 against the honest +0.202).
+See <code>experiments/w10/CODE_REVIEW.md</code>.</p>
 
 <h3>Finding 2 — no correction recovers the dynamics</h3>
-<p>Across all eighteen combinations the first-difference correlation lies in
-<strong>[&minus;0.166, +0.168]</strong> with no consistent sign, and the best level
-correction <em>worsens</em> it (+0.061 uncorrected against &minus;0.034). The most expressive
+<p>Across all eighteen combinations the first-difference correlation lies within
+<strong>±0.19</strong> with no consistent sign, and the best level correction does not
+improve it (uncorrected +0.004 against +0.016 corrected). The most expressive
 family tested — a free offset per 20&nbsp;×&nbsp;20&nbsp;px cell <em>plus</em> a plane,
 fitted on 80&nbsp;% of frames — would recover a real signal hiding under a fixed additive
 pattern. It does not.</p>

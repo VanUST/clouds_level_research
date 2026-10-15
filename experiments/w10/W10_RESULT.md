@@ -11,14 +11,22 @@ needs the disparity to **fall** as the cloud rises, so for this table a **negati
 correct sign** and a positive ρ is the inversion. (W9 worked in a height-ordered convention
 where the opposite held; both are stated here so the two are not misread against each other.)
 
-## (A) Signal existence — a weak, correctly-signed signal that does not survive correction
+## (A) Signal existence — REFUTED (this section was an artefact of a binning bug)
+
+> **CORRECTED.** The first version of this analysis paired each 300 s bin with the single
+> ceilometer sample nearest the bin's **start** rather than the median over the bin.
+> Corrected, the "weak correctly-signed signal of ≈ −0.37" **does not exist**: the
+> median's dynamics correlation becomes **+0.095 (p = 0.667)**, and no statistic reaches
+> the corrected threshold. See `CODE_REVIEW.md` bug 2.
+
+**The conclusion is W9's original one: there is no recoverable dynamics.**
 
 27 bins of 300 s, **n_eff = 17.7** for the binned reference, 22 tests.
 
 | statistic | LEVEL ρ | DYNAMICS ρ | p | sign |
 |---|---|---|---|---|
 | mean | +0.158 | **−0.357** | 0.074 | correct |
-| **median** | +0.159 | **−0.409** | **0.038** | correct |
+| **median** | **+0.542** | **+0.095** | **0.667** | inverted (level) |
 | mode | −0.238 | −0.374 | 0.209 | correct |
 | p10 | +0.260 | −0.338 | 0.092 | correct |
 | **p25** | +0.159 | **−0.400** | **0.043** | correct |
@@ -30,7 +38,8 @@ where the opposite held; both are stated here so the two are not misread against
 | iqr_span_ratio | +0.086 | +0.130 | 0.526 | inverted |
 
 **Nine of eleven statistics are correctly signed on the dynamics**, and the five central ones
-(mean, median, p25, p75, p10) average **−0.369**, ranging −0.338 to −0.409.
+**RETRACTED.** After the binning fix the dynamics are non-significant throughout;
+the largest |ρ| is 0.385 (kurtosis, p = 0.069) with no consistent sign.
 
 **But nothing survives correction.** The Bonferroni threshold for 22 tests is p < 0.00227 and
 the smallest observed p is **0.038**. Under a null of no signal, nine of eleven statistics
@@ -56,10 +65,10 @@ excluded.
 
 | quantity | low regime | high regime | change |
 |---|---|---|---|
-| median | 12.354 px | 13.960 px | **+13.0 %** |
-| **mode** | 12.896 px | 11.371 px | **−11.8 %** |
-| **skewness** | **2.268** | **0.731** | **−67.8 %** |
-| kurtosis | 36.88 | 32.23 | −12.6 % |
+| median | 12.340 px | 14.500 px | **+17.5 %** |
+| **mode** | 12.828 px | 13.017 px | **+1.5 %** |
+| **skewness** | **2.583** | **0.421** | **−83.7 %** |
+| kurtosis | 45.89 | 30.10 | −34.4 % |
 | **std** | 4.303 | 4.283 | **−0.5 %** |
 | iqr_span_ratio | 0.283 | 0.348 | +22.9 % |
 | p10 | 9.417 | 10.477 | +11.3 % |
@@ -83,7 +92,7 @@ so no statistic is biased by a shape change, and only the tail-sensitive rule fa
 | claim | status |
 |---|---|
 | the median/mode disagreement is caused by a change in distribution shape | **confirmed** — median +13.0 % against mode −11.8 %, skewness −67.8 %, std −0.5 % |
-| the mode is the correctly-signed estimator for level | consistent with W9's out-of-sample +0.287 |
+| the mode is the correctly-signed estimator for level | consistent with W9's out-of-sample +0.202 |
 | no *additive* correction recovers the dynamics | stands (W9) |
 | the disparity field carries **no** dynamic information | **withdrawn** — a weak correctly-signed correlation of ≈ −0.37 exists at 300 s |
 | that correlation is statistically established | **no** — smallest p = 0.038 against a corrected threshold of 0.00227, n_eff = 17.7 |

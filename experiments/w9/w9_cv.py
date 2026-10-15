@@ -90,13 +90,25 @@ def load():
         u = a[ok, 0]; v = a[ok, 1]
         # the cell id, the radius bin and the linear terms are properties of the frame
         # alone, so they are computed once here rather than inside every candidate's fit
-        frames.append({"ref": float(r), "u": u, "v": v, "du": du[ok],
+        frames.append({"ref": float(r), "t": parse_time(d["stamps"][i]),
+                       "u": u, "v": v, "du": du[ok],
                        "cell": cell_id(u, v),
                        "rad": np.clip(np.digitize(np.hypot(u - CENTRE, v - CENTRE),
                                                   np.linspace(0, 460.0, 25)) - 1, 0, 23),
                        "lin": np.stack([u - CENTRE, v - CENTRE, np.ones_like(u)], 1)})
-    frames.sort(key=lambda f: f["ref"])
+    # sorted in TIME, not by reference height: the cross-validation must block in time,
+    # because both series are strongly autocorrelated and a randomly held-out frame has its
+    # own near-duplicates in the training set.
+    frames.sort(key=lambda f: f["t"])
     return frames
+
+
+def parse_time(s):
+    m = ST.search(str(s))
+    if not m:
+        return None
+    return dt.datetime(int(m.group(1)[:4]), int(m.group(1)[5:7]), int(m.group(1)[8:10]),
+                       int(m.group(2)), int(m.group(3)), int(m.group(4)))
 
 
 # --- correction families -------------------------------------------------------------
@@ -199,94 +211,133 @@ def estimate(du, est):
 def main():
     frames = load()
     n = len(frames)
-    print(f"frames {n}, references span "
+    print(f"frames {n}, span {frames[0]['t'].strftime('%H:%M')}-"
+          f"{frames[-1]['t'].strftime('%H:%M')} MSK, references "
           f"{min(f['ref'] for f in frames):.0f}-{max(f['ref'] for f in frames):.0f} m")
     idx = np.arange(n)
     rng = np.random.default_rng(0)
-    folds = np.array_split(rng.permutation(idx), K_FOLDS)
+    EMBARGO_S = 300.0
 
-    # Fits are computed ONCE per fold and shared across every (correction, estimator)
-    # combination. Fitting inside the combination loop made the same flat field 18 times
-    # and dominated the runtime for no benefit.
-    fold_data = []
-    for f_test in folds:
-        test_i = set(f_test.tolist())
-        train = [frames[i] for i in idx if i not in test_i]
-        test = [frames[i] for i in f_test]
-        cellmap = fit_cell(train)
-        _edges, prof = fit_radius(train)
-        coef = fit_linear(train)
-        fns = {c: make_corrector(c, cellmap, prof, coef) for c in CORRECTIONS}
-        fold_data.append((fns, test))
-    print(f"{K_FOLDS}-fold, fits computed once per fold for all {len(CORRECTIONS)} families")
+    # Three CV schemes, so the leakage from autocorrelation can be MEASURED rather than
+    # asserted. The reference decorrelates over ~267 s (~27 frames at 10 s), and a randomly
+    # held-out frame has its own near-duplicates in the training set - so "random (leaks)"
+    # is expected to look better than the honest schemes and is included to quantify that.
+    schemes = {}
+    schemes["random (leaks)"] = [np.array_split(rng.permutation(idx), K_FOLDS), None]
+    blocked = np.array_split(idx, K_FOLDS)
+    schemes["blocked"] = [blocked, None]
+    purged = []
+    for f_test in blocked:
+        t0 = frames[f_test[0]]["t"]; t1 = frames[f_test[-1]]["t"]
+        keep = [i for i in idx
+                if (i in set(f_test.tolist())) or
+                (abs((frames[i]["t"] - t0).total_seconds()) > EMBARGO_S and
+                 abs((frames[i]["t"] - t1).total_seconds()) > EMBARGO_S)]
+        purged.append(np.array(keep))
+    schemes["blocked+embargo"] = [purged, EMBARGO_S]
+    print(f"CV schemes: {list(schemes)}  (embargo {EMBARGO_S:.0f} s)")
+
+    # Fits are computed ONCE per fold per scheme and shared across every combination.
+    fold_data = {}
+    for scheme, (folds, _e) in schemes.items():
+        fd = []
+        for f_test in folds:
+            test_i = set(np.asarray(f_test).tolist())
+            train = [frames[i] for i in idx if i not in test_i]
+            test = [frames[i] for i in folds[0].tolist()] if False else \
+                   [frames[i] for i in np.asarray(f_test).tolist()]
+            fd.append(({c: make_corrector(c, fit_cell(train), fit_radius(train)[1],
+                                          fit_linear(train)) for c in CORRECTIONS}, test))
+        fold_data[scheme] = fd
 
     results = {}
-    for corr in CORRECTIONS:
-        for est in ESTIMATORS:
-            lev, dyn = [], []
-            for fns, test in fold_data:
-                fn = fns[corr]
-                pred = np.array([estimate(fn(f), est) for f in test])
-                ref = np.array([f["ref"] for f in test])
-                m = np.isfinite(pred) & np.isfinite(ref)
-                if m.sum() < 3:
+    for scheme, fd in fold_data.items():
+        for corr in CORRECTIONS:
+            for est in ESTIMATORS:
+                lev, dyn = [], []
+                for fns, test in fd:
+                    pred = np.array([estimate(fns[corr](f), est) for f in test])
+                    ref = np.array([f["ref"] for f in test])
+                    m = np.isfinite(pred) & np.isfinite(ref)
+                    if m.sum() < 3:
+                        continue
+                    if np.std(pred[m]) > 0 and np.std(ref[m]) > 0:
+                        lev.append(float(spearmanr(pred[m], ref[m])[0]))
+                    order = np.argsort(ref[m])
+                    p2 = pred[m][order]
+                    if len(p2) > 3 and np.std(np.diff(p2)) > 0:
+                        dyn.append(float(spearmanr(np.diff(p2),
+                                                  np.diff(ref[m][order]))[0]))
+                if not lev:
                     continue
-                if np.std(pred[m]) > 0 and np.std(ref[m]) > 0:
-                    lev.append(float(spearmanr(pred[m], ref[m])[0]))
-                order = np.argsort(ref[m])
-                p2 = pred[m][order]
-                if len(p2) > 3 and np.std(np.diff(p2)) > 0:
-                    dyn.append(float(spearmanr(np.diff(p2), np.diff(ref[m][order]))[0]))
-            if not lev:
-                continue
-            results[f"{corr}|{est}"] = {
-                "correction": corr, "estimator": est, "sign_convention": "positive rho = correct",
-                "level_rho": float(np.nanmean(lev)),
-                "level_rho_std": float(np.nanstd(lev)),
-                "dynamics_rho": float(np.nanmean(dyn)) if dyn else float("nan"),
-                "dynamics_rho_std": float(np.nanstd(dyn)) if dyn else float("nan"),
-                "n_folds": len(lev)}
+                results[f"{scheme}|{corr}|{est}"] = {
+                    "scheme": scheme, "correction": corr, "estimator": est,
+                    "level_rho": float(np.nanmean(lev)),
+                    "level_rho_std": float(np.nanstd(lev)),
+                    "dynamics_rho": float(np.nanmean(dyn)) if dyn else float("nan"),
+                    "n_folds": len(lev)}
 
-    print(f"\nOUT-OF-SAMPLE, {K_FOLDS}-fold: a correction fitted on 4/5 of the session and")
-    print(f"scored on the held-out 1/5. The sign a correct estimator needs is POSITIVE.\n")
-    print(f"{'correction':>16} {'estimator':>10} {'LEVEL rho':>11} {'DYNAMICS rho':>14} {'folds':>6}")
-    ranked = sorted(results.items(), key=lambda kv: -kv[1]["level_rho"])
-    for _k, v in ranked:
-        print(f"{v['correction']:>16} {v['estimator']:>10} {v['level_rho']:>+11.3f} "
-              f"{v['dynamics_rho']:>+14.3f} {v['n_folds']:>6}")
-    best = ranked[0][1]
-    print(f"\nbest by level rho: {best['correction']} + {best['estimator']} "
-          f"-> level {best['level_rho']:+.3f}, dynamics {best['dynamics_rho']:+.3f}")
-    dyn_ok = [v for v in results.values()
-              if np.isfinite(v["dynamics_rho"]) and v["dynamics_rho"] > 0.3]
-    verdict = ("A CORRECTION PRODUCES POSITIVE OUT-OF-SAMPLE DYNAMICS at "
-               + ", ".join(f"{v['correction']}+{v['estimator']} "
-                           f"(rho={v['dynamics_rho']:+.2f})" for v in dyn_ok)
+    print(f"\nThe statistic is HEIGHT-ORDERED: POSITIVE rho is the correct sign.\n")
+    for scheme in schemes:
+        rows = sorted([v for v in results.values() if v["scheme"] == scheme],
+                      key=lambda v: -v["level_rho"])
+        print(f"--- {scheme} ---")
+        print(f"{'correction':>16} {'estimator':>10} {'LEVEL rho':>11} "
+              f"{'DYNAMICS rho':>14}")
+        for v in rows[:6]:
+            print(f"{v['correction']:>16} {v['estimator']:>10} {v['level_rho']:>+11.3f} "
+                  f"{v['dynamics_rho']:>+14.3f}")
+        print()
+
+    # the headline comparison: how much does the leakage buy?
+    def best(scheme, key):
+        rows = [v for v in results.values() if v["scheme"] == scheme]
+        if not rows:
+            return float("nan")
+        return max(v[key] for v in rows if np.isfinite(v[key])) if any(
+            np.isfinite(v[key]) for v in rows) else float("nan")
+
+    print(f"{'scheme':>18} {'best LEVEL rho':>15} {'best DYNAMICS rho':>18}")
+    for scheme in schemes:
+        print(f"{scheme:>18} {best(scheme,'level_rho'):>+15.3f} "
+              f"{best(scheme,'dynamics_rho'):>+18.3f}")
+
+    honest = [v for v in results.values()
+              if v["scheme"] == "blocked+embargo" and np.isfinite(v["dynamics_rho"])]
+    dyn_ok = [v for v in honest if v["dynamics_rho"] > 0.3]
+    verdict = ("A CORRECTION PRODUCES POSITIVE OUT-OF-SAMPLE DYNAMICS under blocked+embargo "
+               "validation at " + ", ".join(f"{v['correction']}+{v['estimator']} "
+                                            f"(rho={v['dynamics_rho']:+.2f})" for v in dyn_ok)
                if dyn_ok else
-               "NO CORRECTION PRODUCES POSITIVE OUT-OF-SAMPLE DYNAMICS: every operation "
-               "searched leaves the series anti-correlated or uncorrelated with the "
-               "reference on held-out folds")
+               "NO CORRECTION PRODUCES POSITIVE OUT-OF-SAMPLE DYNAMICS under blocked+embargo "
+               "validation; every operation leaves the series anti-correlated or uncorrelated "
+               "with the reference once the autocorrelation leakage is removed")
     print(f"\nVERDICT: {verdict}")
+
     os.makedirs(HERE, exist_ok=True)
-    json.dump({"results": results, "k_folds": K_FOLDS, "verdict": verdict},
-              open(os.path.join(HERE, "w9_cv.json"), "w"), indent=1)
+    json.dump({"results": results, "k_folds": K_FOLDS, "embargo_s": EMBARGO_S,
+               "verdict": verdict}, open(os.path.join(HERE, "w9_cv.json"), "w"), indent=1)
 
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    fig, ax = plt.subplots(figsize=(10.0, 4.6))
-    labs = [f"{v['correction']}\n{v['estimator']}" for _k, v in ranked]
-    x = np.arange(len(ranked))
-    ax.bar(x - 0.2, [v["level_rho"] for _k, v in ranked], 0.4, color="#1f6feb",
-           label="LEVEL rho")
-    ax.bar(x + 0.2, [v["dynamics_rho"] for _k, v in ranked], 0.4, color="#c1440e",
-           label="DYNAMICS rho")
-    ax.axhline(0, color="k", lw=0.8)
-    ax.set_xticks(x); ax.set_xticklabels(labs, fontsize=7, rotation=90)
-    ax.set_ylabel("out-of-sample Spearman rho")
-    ax.set_title(f"{K_FOLDS}-fold cross-validated corrections: level and dynamics "
-                 f"(correct = positive)", fontsize=10)
-    ax.legend(fontsize=8)
+    fig, axes = plt.subplots(1, len(schemes), figsize=(5.0 * len(schemes), 4.6),
+                             sharey=True)
+    for ax, scheme in zip(np.atleast_1d(axes), schemes):
+        rows = sorted([v for v in results.values() if v["scheme"] == scheme],
+                      key=lambda v: -v["level_rho"])
+        labs = [f"{v['correction']}\n{v['estimator']}" for v in rows]
+        x = np.arange(len(rows))
+        ax.bar(x - 0.2, [v["level_rho"] for v in rows], 0.4, color="#1f6feb", label="LEVEL")
+        ax.bar(x + 0.2, [v["dynamics_rho"] for v in rows], 0.4, color="#c1440e",
+               label="DYNAMICS")
+        ax.axhline(0, color="k", lw=0.8)
+        ax.set_xticks(x); ax.set_xticklabels(labs, fontsize=6, rotation=90)
+        ax.set_title(scheme, fontsize=10)
+    np.atleast_1d(axes)[0].set_ylabel("out-of-sample Spearman rho")
+    np.atleast_1d(axes)[0].legend(fontsize=8)
+    fig.suptitle(f"{K_FOLDS}-fold cross-validation schemes: does the leakage change the "
+                 f"answer?", fontsize=10)
     fig.savefig(os.path.join(OUT, "w9_cv.png"), bbox_inches="tight", facecolor="white")
     print(f"\nwrote {OUT}/w9_cv.png and {os.path.join(HERE, 'w9_cv.json')}")
 
