@@ -291,7 +291,7 @@ mechanisms.
 >
 > **The obstacle is sample size, not absence.** The reference decorrelates over ~267 s, so
 > 27 bins hold **n_eff = 17.7 independent samples**, and the smallest detectable |ρ| at
-> p = 0.05 is **≈ 0.47**. The observed −0.37 lies **below the detection floor of the
+> p = 0.05 is **≈ 0.466**. The observed −0.37 lies **below the detection floor of the
 > design**. Establishing a correlation of 0.37 at 80 % power requires **n_eff ≈ 55** — roughly
 > a threefold longer session, or a reference that decorrelates faster.
 >
@@ -350,9 +350,9 @@ a validated instrument. What remains is not another hypothesis but a **controlle
    column and a 2 km area hard to interpret at all.
 4. **A session long enough to detect ±0.37.** The dynamics question is sample-limited, not
    signal-limited. The binned series spans 2.25 h and yields **n_eff = 17.7**, one independent
-   sample per 456 s of elapsed time. The Fisher-z relation gives a critical |ρ| of **0.470**
+   sample per 456 s of elapsed time. The Fisher-z relation gives a critical |ρ| of **0.466**
    at p = 0.05 for that sample size, and **n_eff = 60** for a correlation of 0.37 at 80 %
-   power — so a decisive session needs **≈ 7.6 hours of binned data**, not fifteen. That is the
+   power — so a decisive session needs **≈ 7.5 hours of binned data**, not fifteen. That is the
    cheapest decisive experiment remaining: it would convert "below the detection floor" into
    either a detection or a genuine absence.
 

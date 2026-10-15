@@ -5,6 +5,7 @@ Four kinds of document, kept separate because they answer different questions.
 | Directory | Question it answers | Author |
 |---|---|---|
 | [`results/`](results/README.md) | **Paper-usable results index** — each result with the artefact and command that reproduces it. |
+| **[`../paper/main.pdf`](../paper/main.pdf)** | **The paper** — self-contained 15-page account of the whole programme, written for a reader with no prior context. LaTeX source at `paper/main.tex`. |
 | **[`report/final-findings.html`](report/final-findings.html)** | **New findings** — the static-field diagnosis, the cross-validated correction search, the shape mechanism, and the detection floor, with four amendments to the record. |
 | **[`report/final.html`](report/final.html)** | **The final report, rendered** — figures embedded, self-contained, opens in a browser. |
 | [`report/final-report.md`](report/final-report.md) | **The final report** — a validated instrument, twelve pre-registered refutations, and a bounded null result. Start here for the science. |

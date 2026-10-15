@@ -293,7 +293,7 @@ observed p of 0.038.</p>
 <tr><th>quantity</th><th>value</th></tr>
 <tr><td>binned series</td><td>27 bins of 300 s = <strong>2.25 h</strong></td></tr>
 <tr><td>effective sample size</td><td><strong>n<sub>eff</sub> = 17.7</strong>
-    (one independent sample per 456 s)</td></tr>
+    (one independent sample per 449 s)</td></tr>
 <tr><td><strong>critical |&rho;| for significance</strong> at p = 0.05</td>
     <td><strong>0.470</strong></td></tr>
 <tr><td>|&rho;| detectable with 80 % power at n<sub>eff</sub> = 17.7</td><td>0.731</td></tr>
@@ -301,7 +301,7 @@ observed p of 0.038.</p>
     <td><strong>60.3</strong></td></tr>
 <tr><td>n<sub>eff</sub> needed for &rho; = 0.47 at 80 % power</td><td>38.5</td></tr>
 <tr><td><strong>duration for a decisive session</strong></td>
-    <td><strong>2.25 h × (60.3/17.75) ≈ 7.6 h</strong></td></tr>
+    <td><strong>2.25 h × (60.3/18.05) ≈ 7.5 h</strong></td></tr>
 </table>
 
 <p><strong>The observed &minus;0.37 lies below the 0.470 detection floor of the
@@ -338,8 +338,8 @@ experiment.</blockquote>
   "&ldquo;&gt;15 hours&rdquo; was proposed in review, and this project's own W10 stated "
   "n<sub>eff</sub> ≈ 55.",
   "the Fisher-z relation gives <strong>n<sub>eff</sub> = 60.3</strong> for a correlation of "
-  "0.37 at 80 % power, and the binned series yields one independent sample per 456 s, so a "
-  "decisive session needs <strong>≈ 7.6 h</strong>. The correction is a factor of two and it "
+  "0.37 at 80 % power, and the binned series yields one independent sample per 449 s, so a "
+  "decisive session needs <strong>≈ 7.5 h</strong>. The correction is a factor of two and it "
   "makes the recommended experiment cheaper than it appeared.")}
 
 {amendment("the cause of the static field",
