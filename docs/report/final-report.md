@@ -141,8 +141,8 @@ four fifths of the session and scored on the held-out fifth:
 
 | estimator | out-of-sample level ρ | sign |
 |---|---|---|
-| **lowest prominent mode** | **+0.137, and +0.202 with a per-cell + linear correction** | **correct** |
-| median | −0.386 | inverted |
+| **lowest prominent mode** | **+0.053, and +0.217 with a per-cell + linear correction** | **correct** |
+| median | −0.347 to −0.246 | inverted |
 | 25th percentile | −0.296 | inverted |
 
 **The inversion is a property of the median-like statistics on which it was measured, not of

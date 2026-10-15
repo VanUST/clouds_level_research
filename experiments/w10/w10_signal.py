@@ -7,7 +7,7 @@
 #              no dynamics in it to recover.
 #
 #          (B) THE SHAPE MECHANISM. W9 found the level correlation is correctly signed for
-#              the MODE (+0.202 out of sample, blocked+embargo) and inverted for the MEDIAN
+#              the MODE (+0.217 out of sample, blocked+embargo) and inverted for the MEDIAN
 #              and p25 (-0.386, -0.296). The proposed explanation is that the disparity distribution's SHAPE
 #              changes between regimes - the high regime is more skewed and heavier-tailed -
 #              and that quantile statistics move with the shape while the mode does not.
@@ -43,6 +43,7 @@ OUT = os.path.join(REPO, "docs", "report")
 sys.path.insert(0, os.path.join(REPO, "src"))
 from clouds.sources import ceilometer as C                                      # noqa: E402
 from clouds.pipeline.analyze import lowest_prominent_mode                       # noqa: E402
+from clouds.validation import ProvenanceError, assert_bin_reference             # noqa: E402
 
 LOG = "/home/iustimov/clouds_data/Звенигород/scilometer/Zve_Sci_250523.txt"
 ST = re.compile(r"(\d{4}-\d{2}-\d{2})T(\d{2})-(\d{2})-(\d{2})")
@@ -90,6 +91,11 @@ def neff(x):
 def main():
     d = np.load(os.path.join(HERE, "..", "w4", "matches_roma_20250523.npz"),
                 allow_pickle=True)
+    # HOIST THE OBJECT ARRAYS OUT OF THE LOOP. An NpzFile decompresses a member on every
+    # __getitem__, so `_uv[i]` inside a 386-frame loop re-reads and re-decompresses the
+    # whole 61 MB member each iteration - measured at 184 ms per access, 258 s for the load.
+    # Hoisted, the same work takes under a second.
+    _uv = list(d["uv"]); _kp2 = list(d["kp2"]); _stamps = list(d["stamps"])
     series = [(x.time, x.h1) for x in C.parse_ceilometer_log(LOG) if x.h1 is not None]
 
     def ref_at(t):
@@ -116,11 +122,11 @@ def main():
     # --- bin frames, then pool the matches inside each bin ---------------------------
     bins = {}
     for i in range(len(d["stamps"])):
-        t = parse(d["stamps"][i])
+        t = parse(_stamps[i])
         if t is None:
             continue
-        a = np.asarray(d["uv"][i], float)
-        b = np.asarray(d["kp2"][i], float)
+        a = np.asarray(_uv[i], float)
+        b = np.asarray(_kp2[i], float)
         if len(a) < MIN_MATCHES:
             continue
         du = a[:, 0] - b[:, 0]
@@ -139,6 +145,16 @@ def main():
         r = ref_bin(t, t + dt.timedelta(seconds=BIN_S))
         if r is None:
             continue
+        # PROVENANCE: the guard asserts that `r` really is the median of the reference
+        # samples inside this bin. The first version of this file took the sample nearest
+        # the bin's START, which manufactured a dynamic signal that did not exist; this
+        # assertion is what would have caught it.
+        try:
+            assert_bin_reference(
+                (t.timestamp(), (t + dt.timedelta(seconds=BIN_S)).timestamp()),
+                [tt.timestamp() for tt, _ in series], [hh for _, hh in series], r)
+        except ProvenanceError as exc:
+            raise SystemExit(f"PROVENANCE FAILURE in the reference binning: {exc}")
         s = stats_of(du)
         s["t"] = t
         s["n_matches"] = int(len(du))

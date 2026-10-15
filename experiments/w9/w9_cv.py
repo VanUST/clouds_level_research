@@ -49,6 +49,8 @@ OUT = os.path.join(REPO, "docs", "report")
 sys.path.insert(0, os.path.join(REPO, "src"))
 from clouds.sources import ceilometer as C                                      # noqa: E402
 from clouds.pipeline.analyze import lowest_prominent_mode                       # noqa: E402
+from clouds.validation import (ProvenanceError,                                # noqa: E402
+                               assert_disjoint_with_embargo)
 
 LOG = "/home/iustimov/clouds_data/Звенигород/scilometer/Zve_Sci_250523.txt"
 F_PX, B_M, CROP = 654.0, 45.0, 640.0
@@ -61,6 +63,11 @@ K_FOLDS = 5
 def load():
     d = np.load(os.path.join(HERE, "..", "w4", "matches_roma_20250523.npz"),
                 allow_pickle=True)
+    # HOIST THE OBJECT ARRAYS OUT OF THE LOOP. An NpzFile decompresses a member on every
+    # __getitem__, so `_uv[i]` inside a 386-frame loop re-reads and re-decompresses the
+    # whole 61 MB member each iteration - measured at 184 ms per access, 258 s for the load.
+    # Hoisted, the same work takes under a second.
+    _uv = list(d["uv"]); _kp2 = list(d["kp2"]); _stamps = list(d["stamps"])
     series = [(x.time, x.h1) for x in C.parse_ceilometer_log(LOG) if x.h1 is not None]
 
     def ref_at(s):
@@ -78,9 +85,9 @@ def load():
 
     frames = []
     for i in range(len(d["stamps"])):
-        r = ref_at(d["stamps"][i])
-        a = np.asarray(d["uv"][i], float)
-        b = np.asarray(d["kp2"][i], float)
+        r = ref_at(_stamps[i])
+        a = np.asarray(_uv[i], float)
+        b = np.asarray(_kp2[i], float)
         if r is None or len(a) < 500:
             continue
         du = a[:, 0] - b[:, 0]
@@ -90,7 +97,7 @@ def load():
         u = a[ok, 0]; v = a[ok, 1]
         # the cell id, the radius bin and the linear terms are properties of the frame
         # alone, so they are computed once here rather than inside every candidate's fit
-        frames.append({"ref": float(r), "t": parse_time(d["stamps"][i]),
+        frames.append({"ref": float(r), "t": parse_time(_stamps[i]),
                        "u": u, "v": v, "du": du[ok],
                        "cell": cell_id(u, v),
                        "rad": np.clip(np.digitize(np.hypot(u - CENTRE, v - CENTRE),
@@ -234,7 +241,12 @@ def main():
                 (abs((frames[i]["t"] - t0).total_seconds()) > EMBARGO_S and
                  abs((frames[i]["t"] - t1).total_seconds()) > EMBARGO_S)]
         purged.append(np.array(keep))
-    schemes["blocked+embargo"] = [purged, EMBARGO_S]
+    # The embargo applies to TRAIN, not to test. The first version built `keep` as "in the
+    # test block OR far from its edges" and stored THAT as the fold, so the fold contained
+    # both the held-out block and the frames that should have trained it - the embargo was
+    # applied to the wrong side entirely. `schemes` now carries (test_folds, embargo_s) and
+    # the purge happens where train is built.
+    schemes["blocked+embargo"] = [blocked, EMBARGO_S]
     print(f"CV schemes: {list(schemes)}  (embargo {EMBARGO_S:.0f} s)")
 
     # Fits are computed ONCE per fold per scheme and shared across every combination.
@@ -243,9 +255,31 @@ def main():
         fd = []
         for f_test in folds:
             test_i = set(np.asarray(f_test).tolist())
-            train = [frames[i] for i in idx if i not in test_i]
-            test = [frames[i] for i in folds[0].tolist()] if False else \
-                   [frames[i] for i in np.asarray(f_test).tolist()]
+            test_arr = np.asarray(f_test)
+            train_arr = np.array([i for i in idx if i not in test_i])
+            if scheme == "blocked+embargo":
+                t_te = np.array([frames[i]["t"].timestamp() for i in test_arr])
+                t_tr = np.array([frames[i]["t"].timestamp() for i in train_arr])
+                far = np.array([np.min(np.abs(t_te - t)) > EMBARGO_S for t in t_tr])
+                train_arr = train_arr[far]
+            # PROVENANCE: the first version drew folds at RANDOM from a series whose lag-1
+            # autocorrelation is 0.93, so every held-out frame had its own near-duplicates
+            # in training and the "out-of-sample" score was inflated by +0.084. The guard
+            # asserts disjointness and the embargo; it is what would have caught it.
+            try:
+                assert_disjoint_with_embargo(
+                    train_arr, test_arr,
+                    np.array([f["t"].timestamp() for f in frames]),
+                    EMBARGO_S if scheme == "blocked+embargo" else 0.0)
+            except ProvenanceError as exc:
+                if scheme == "random (leaks)":
+                    pass          # kept deliberately, as the leaking baseline
+                elif scheme == "blocked":
+                    pass          # contiguous but unpurged; the point of the comparison
+                else:
+                    raise SystemExit(f"PROVENANCE FAILURE in fold construction: {exc}")
+            train = [frames[i] for i in train_arr]
+            test = [frames[i] for i in test_arr.tolist()]
             fd.append(({c: make_corrector(c, fit_cell(train), fit_radius(train)[1],
                                           fit_linear(train)) for c in CORRECTIONS}, test))
         fold_data[scheme] = fd

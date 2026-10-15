@@ -95,12 +95,34 @@ def lowest_prominent_mode(heights, weights=None, min_weight_share=0.10,
         n_eff = max(w.sum() ** 2 / max((w ** 2).sum(), 1e-12), 1.0)
         bandwidth_m = max(1.06 * sd * n_eff ** (-0.2), 25.0)
     bw = float(bandwidth_m)
-    # KDE on the grid, in chunks to bound memory
-    dens = np.zeros_like(grid)
-    for i in range(0, len(h), 4096):
-        hh = h[i:i + 4096]; ww = w[i:i + 4096]
-        z = (grid[:, None] - hh[None, :]) / bw
-        dens += (ww[None, :] * np.exp(-0.5 * z * z)).sum(axis=1)
+    # KDE on the grid. This is the hot path of the estimator - 512 grid points against every
+    # match in the frame - and it is the same dense pairwise computation on every call, so
+    # it runs on the GPU when one is available. The CPU branch is kept identical and is the
+    # fallback, so a machine without CUDA still produces the same answer.
+    dens = None
+    try:
+        import torch
+        if torch.cuda.is_available() and len(h) >= 2000:
+            dev = torch.device("cuda")
+            hg = torch.as_tensor(h, dtype=torch.float32, device=dev)
+            wg = torch.as_tensor(w, dtype=torch.float32, device=dev)
+            gg = torch.as_tensor(grid, dtype=torch.float32, device=dev)
+            acc = torch.zeros_like(gg)
+            # chunked over the matches so the intermediate is bounded, not over the grid:
+            # 512 x 65536 is 128 MB in float32, which is safe on any modern card
+            for i in range(0, hg.numel(), 65536):
+                hh = hg[i:i + 65536]; ww = wg[i:i + 65536]
+                z = (gg[:, None] - hh[None, :]) / bw
+                acc += (ww[None, :] * torch.exp(-0.5 * z * z)).sum(dim=1)
+            dens = acc.cpu().numpy()
+    except Exception:
+        dens = None
+    if dens is None:
+        dens = np.zeros_like(grid)
+        for i in range(0, len(h), 4096):
+            hh = h[i:i + 4096]; ww = w[i:i + 4096]
+            z = (grid[:, None] - hh[None, :]) / bw
+            dens += (ww[None, :] * np.exp(-0.5 * z * z)).sum(axis=1)
     dens /= (w.sum() * bw * math.sqrt(2 * math.pi))
     peaks, props = find_peaks(dens, prominence=dens.max() * 0.10)
     modes = []

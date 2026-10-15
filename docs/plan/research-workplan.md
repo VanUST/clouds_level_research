@@ -1947,15 +1947,15 @@ spread across the radius against the disparity's 14 %.
 ## The search: 6 corrections × 3 estimators × 5-fold, out of sample
 | correction | estimator | LEVEL ρ | DYNAMICS ρ |
 |---|---|---|---|
-| **per-cell+linear** | **mode** | **+0.202** | +0.016 |
-| none (baseline) | mode | +0.137 | −0.086 |
-| none | median | **−0.386** | +0.004 |
+| **per-cell+linear** | **mode** | **+0.217** | −0.038 |
+| none (baseline) | mode | +0.053 | −0.104 |
+| none | median | **−0.347** | −0.010 |
 
 ### Finding 1 — the sign depends on the estimator, and this corrects the record
-The **mode** estimator is **correctly signed** out of sample (+0.137 → +0.202). The **median**
+The **mode** estimator is **correctly signed** out of sample (+0.053 → +0.217). The **median**
 (These are blocked+embargo figures; the first version drew random folds, which on a series
 with lag-1 autocorrelation 0.934 leaked near-duplicates into training and inflated the
-headline by +0.084. See `experiments/w10/CODE_REVIEW.md`.)
+headline by +0.070. See `experiments/w10/CODE_REVIEW.md`.)
 and p25 are **inverted** (−0.41, −0.30). The project's "inversion" was measured on
 median-like statistics; it is a property of *those* statistics, not of the disparity field as
 a whole. **This must be carried into `final-report.md` §2.**

@@ -92,7 +92,7 @@ so no statistic is biased by a shape change, and only the tail-sensitive rule fa
 | claim | status |
 |---|---|
 | the median/mode disagreement is caused by a change in distribution shape | **confirmed** — median +13.0 % against mode −11.8 %, skewness −67.8 %, std −0.5 % |
-| the mode is the correctly-signed estimator for level | consistent with W9's out-of-sample +0.202 |
+| the mode is the correctly-signed estimator for level | consistent with W9's out-of-sample +0.217 |
 | no *additive* correction recovers the dynamics | stands (W9) |
 | the disparity field carries **no** dynamic information | **withdrawn** — a weak correctly-signed correlation of ≈ −0.37 exists at 300 s |
 | that correlation is statistically established | **no** — smallest p = 0.038 against a corrected threshold of 0.00227, n_eff = 17.7 |

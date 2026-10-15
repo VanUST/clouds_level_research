@@ -34,7 +34,7 @@ the correct sign and negative ρ is the inversion**.
 
 | correction | estimator | LEVEL ρ | DYNAMICS ρ |
 |---|---|---|---|
-| **per-cell + linear** | **mode** | **+0.202** | +0.016 |
+| **per-cell + linear** | **mode** | **+0.217** | −0.038 |
 | linear | mode | +0.194 | −0.166 |
 | per-cell | mode | +0.179 | +0.011 |
 | **none** (baseline) | mode | +0.137 | −0.086 |
@@ -42,13 +42,13 @@ the correct sign and negative ρ is the inversion**.
 | cell-smooth | mode | +0.147 | −0.161 |
 | linear | median | −0.429 | +0.122 |
 | per-cell | median | −0.422 | +0.120 |
-| **none** (baseline) | median | **−0.386** | +0.004 |
+| **none** (baseline) | median | **−0.347** | −0.010 |
 | per-cell + linear | median | −0.424 | +0.106 |
 
 ### Two findings, and one of them is a correction to the record
 
 **1. The sign of the level result depends on the estimator.** The **mode** estimator is
-**correctly signed** out of sample (+0.137 uncorrected, +0.202 with the best correction,
+**correctly signed** out of sample (+0.053 uncorrected, +0.217 with the best correction,
 under blocked+embargo).
 The **median** and 25th percentile are **inverted** (−0.41 and −0.30). The project's
 "inversion" was measured on median-like statistics, and this shows the inversion is a

@@ -114,3 +114,63 @@ somewhere other than where it was claimed to come from.** A fold that is not ind
 reference read from the edge of a bin rather than its middle. Neither raised an error, and
 neither was visible in the output — the W10 result looked *better* after the bug than before
 it, which is exactly why it survived a round.
+
+---
+
+## Finding 4 — a third bug in W9, caught by the guard it motivated
+
+While wiring `assert_disjoint_with_embargo` into the fold construction it fired immediately:
+
+> training index 75 at t=1747978021 lies 20.0 s from held-out index 74, within the 300 s
+> embargo
+
+**The cause.** The "blocked + embargo" folds were built as
+
+```
+keep = [i for i in idx if (i in set(f_test)) or
+        (|t_i - t_start| > EMBARGO and |t_i - t_end| > EMBARGO)]
+```
+
+which is the set of frames **allowed into the analysis** — the held-out block *plus* the
+distant training frames — and that set was then stored as the **fold**. So `f_test` contained
+both the block and its own training data, and `train = idx not in test_i` silently dropped
+the distant frames. **The embargo was applied to the test side rather than the training
+side**, and the "blocked + embargo" figures reported in the previous round were computed with
+a fold definition that neither blocked nor embargoed correctly.
+
+**The fix.** `schemes` carries `(test_folds, embargo_s)`; the purge is applied where the
+training set is assembled, dropping every training frame within the embargo of any held-out
+frame.
+
+**Corrected figures** (best level ρ across six corrections and three estimators):
+
+| scheme | best LEVEL ρ | best DYNAMICS ρ |
+|---|---|---|
+| random (leaks) | +0.287 | +0.052 |
+| blocked | +0.216 | +0.046 |
+| **blocked + embargo** | **+0.217** | **+0.047** |
+
+The leakage inflates the headline by **+0.070** (not +0.084 as first reported), and the
+honest figure is **+0.217**. The estimator-dependence survives: the mode is correct-signed
+(+0.053 uncorrected, +0.217 corrected) and the **median is inverted at −0.347 to −0.246**
+across corrections. The conclusion is unchanged — no correction produces dynamics.
+
+**Worth noting:** once the embargo is applied to the correct side it barely changes the
+blocked result (+0.216 → +0.217). The inflation therefore comes almost entirely from
+**random** folds on an autocorrelated series, not from the absence of an embargo. That does
+not make the embargo pointless — it is what proves the folds are now honest — but the
+comparison that matters is random against blocked.
+
+## Performance (requested separately)
+
+Three fixes, all measured:
+
+| fix | before | after |
+|---|---|---|
+| hoist the `.npz` object arrays out of the 386-frame loop (`d["uv"][i]` re-decompresses the whole 61 MB member on every access) | **258 s** to load | **1.4 s** |
+| move the KDE in `lowest_prominent_mode` to the GPU (it is one dense 512 × N computation per call) | 97 ms/call | **1.5 ms/call** (CPU fallback kept, output bit-identical to 0.000000 m) |
+| W9 end to end | >50 min | **57 s** |
+| W10 end to end | minutes | **7 s** |
+
+The GPU path is exercised only for frames with ≥2000 matches and falls back to the identical
+NumPy code otherwise, so a machine without CUDA produces the same answers.

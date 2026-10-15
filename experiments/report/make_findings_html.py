@@ -167,11 +167,11 @@ nothing is scored on the frames that shaped it.</p>
 <table>
 <tr><th>correction</th><th>estimator</th><th>LEVEL &rho;</th><th>DYNAMICS &rho;</th></tr>
 <tr><td><strong>per-cell + linear</strong></td><td><strong>mode</strong></td>
-    <td class="g"><strong>+0.202</strong></td><td class="g">+0.016</td></tr>
+    <td class="g"><strong>+0.217</strong></td><td class="g">&minus;0.038</td></tr>
 <tr><td>linear</td><td>mode</td><td class="g">+0.194</td><td class="g">&minus;0.166</td></tr>
 <tr><td>per-cell</td><td>mode</td><td class="g">+0.179</td><td class="g">+0.011</td></tr>
 <tr><td><strong>none</strong> (baseline)</td><td>mode</td>
-    <td class="g">+0.137</td><td class="g">&minus;0.086</td></tr>
+    <td class="g">+0.053</td><td class="g">&minus;0.104</td></tr>
 <tr><td>per-radius</td><td>mode</td><td class="g">+0.149</td><td class="g">&minus;0.042</td></tr>
 <tr><td>cell-smooth</td><td>mode</td><td class="g">+0.147</td><td class="g">&minus;0.161</td></tr>
 <tr><td>linear</td><td>median</td><td class="g">&minus;0.429</td><td class="g">+0.122</td></tr>
@@ -188,13 +188,13 @@ nothing is scored on the frames that shaped it.</p>
 
 <h3>Finding 1 — the sign depends on the estimator</h3>
 <p>The <strong>mode</strong> estimator is <strong>correctly signed out of sample</strong>
-(+0.137 uncorrected, +0.202 with the best correction). The <strong>median</strong> and the
-25th percentile are <strong>inverted</strong> (&minus;0.386, &minus;0.296). The best
+(+0.053 uncorrected, +0.217 with the best correction). The <strong>median</strong> and the
+25th percentile are <strong>inverted</strong> (&minus;0.347 to &minus;0.246). The best
 correction moves the level by +0.065 and leaves the sign on the correct side.</p>
 <p><strong>Corrected after review:</strong> these figures come from
 <em>blocked + embargo</em> cross-validation. The first version drew folds at random, which
 on a series with lag-1 autocorrelation 0.934 placed each held-out frame's near-duplicates in
-the training set; that leaked +0.084 into the headline (+0.286 against the honest +0.202).
+the training set; that leaked +0.070 into the headline (+0.287 against the honest +0.217).
 See <code>experiments/w10/CODE_REVIEW.md</code>.</p>
 
 <h3>Finding 2 — no correction recovers the dynamics</h3>
