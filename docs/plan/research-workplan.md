@@ -1966,3 +1966,50 @@ uncorrected).
 anomaly cannot be described as "a static field masking a real signal" without qualification —
 an expressive correction does not reveal the signal, and the possibility that the disparity
 variation carries no information at this footprint ratio is not excluded.
+
+---
+
+# W10 — SHAPE MECHANISM CONFIRMED, DYNAMICS BOUNDARY REFINED (2026-10-15)
+
+Full record: `experiments/w10/W10_RESULT.md`.
+
+## (A) A weak, correctly-signed dynamics signal — and it corrects W9
+
+For a DISPARITY statistic against a HEIGHT reference, **negative ρ is correct**. 27 bins of
+300 s, n_eff = **17.7**, 22 tests.
+
+| statistic | dynamics ρ | p |
+|---|---|---|
+| **median** | **−0.409** | **0.038** |
+| p25 | −0.400 | 0.043 |
+| mean / p75 / p10 | −0.357 / −0.340 / −0.338 | 0.07–0.09 |
+
+**Nine of eleven statistics are correctly signed**; the five central ones average **−0.369**.
+**Nothing survives correction** (Bonferroni threshold 0.00227 against a smallest p of 0.038).
+
+**This corrects W9.** W9 measured per-frame first differences on held-out folds (|ρ| < 0.17)
+and I read that as the field carrying no dynamic information. **That was too strong**: at
+300 s binning the same data gives a consistent correctly-signed ≈ −0.37. Binning suppresses
+the per-frame noise the earlier analysis was dominated by.
+
+## (B) The shape mechanism is CONFIRMED
+| quantity | low | high | change |
+|---|---|---|---|
+| median | 12.354 px | 13.960 px | **+13.0 %** |
+| **mode** | 12.896 px | 11.371 px | **−11.8 %** |
+| **skewness** | **2.268** | **0.731** | **−67.8 %** |
+| **std** | 4.303 | 4.283 | **−0.5 %** |
+
+**The median and mode move oppositely while the standard deviation is unchanged.** The
+distribution does not widen between regimes; it **changes shape**, its skewness collapsing by
+68 %. A bulk statistic and a cumulative-mass statistic must diverge when skewness changes,
+which is exactly what is seen — and it is why the synthetic control (fixed shape) passed for
+`lowest_mode` while `lowest` failed.
+
+## The real boundary
+The reference decorrelates over ~267 s, so 27 bins hold **17.7 independent samples** and the
+smallest detectable |ρ| at p = 0.05 is **≈ 0.47**. The observed −0.37 is **below the detection
+floor**: not absent, but unmeasurable here. Detecting ρ = 0.37 at 80 % power needs
+**n_eff ≈ 55** — roughly a threefold longer session.
+
+**Not "no signal" — a signal at or below what this session can detect.**
