@@ -99,3 +99,21 @@ decorrelates faster.
 
 **That is the real boundary: not "no signal", but "a signal at or below what this session can
 detect".**
+
+## The duration a decisive session needs — corrected
+
+The exact figures, from the Fisher-z relation for a two-sided test at p = 0.05:
+
+| quantity | value |
+|---|---|
+| critical \|ρ\| for significance at n_eff = 17.7 | **0.470** |
+| \|ρ\| detectable with 80 % power at n_eff = 17.7 | 0.731 |
+| **n_eff needed for ρ = 0.37 at 80 % power** | **60.3** (not 55) |
+| n_eff needed for ρ = 0.47 at 80 % power | 38.5 |
+
+The binned series spans 27 × 300 s = 2.25 h and yields n_eff = 17.7, i.e. **one independent
+sample per 456 s of elapsed time**. Reaching n_eff = 60 therefore needs
+
+**2.25 h × (60.3 / 17.7) ≈ 7.7 h of binned data** — about **8 hours**, not the ">15 hours"
+proposed in review. The correction is a factor of two, and it makes the decisive experiment
+cheaper than it appeared.

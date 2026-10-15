@@ -344,10 +344,12 @@ a validated instrument. What remains is not another hypothesis but a **controlle
    would remove the 200:1 sampling mismatch that makes a level comparison between a point
    column and a 2 km area hard to interpret at all.
 4. **A session long enough to detect ±0.37.** The dynamics question is sample-limited, not
-   signal-limited: **n_eff = 17.7** against a requirement of **≈ 55** for a correlation of
-   0.37 at 80 % power. A threefold longer session — or several pooled — would convert the
-   present "below the detection floor" into either a detection or a genuine absence, and
-   that is the cheapest decisive experiment remaining.
+   signal-limited. The binned series spans 2.25 h and yields **n_eff = 17.7**, one independent
+   sample per 456 s of elapsed time. The Fisher-z relation gives a critical |ρ| of **0.470**
+   at p = 0.05 for that sample size, and **n_eff = 60** for a correlation of 0.37 at 80 %
+   power — so a decisive session needs **≈ 8 hours of binned data**, not fifteen. That is the
+   cheapest decisive experiment remaining: it would convert "below the detection floor" into
+   either a detection or a genuine absence.
 
 ---
 
